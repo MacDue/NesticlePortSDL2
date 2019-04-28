@@ -1,0 +1,2169 @@
+diff --git a/src-original/command.cpp b/src/command.cpp
+index d1cfd33..2d695fb 100644
+--- a/src-original/command.cpp
++++ b/src/command.cpp
+@@ -9,6 +9,8 @@
+ #include "command.h"
+ #include "message.h"
+ 
++#include <strings.h>
++#define stricmp strcasecmp
+ 
+ //----------------------------------------------------
+ //defs for system options
+@@ -34,7 +36,7 @@ int getinputtype(char *s)
+   if (!stricmp(s,inputtypes[i])) return i;
+ 
+  msg.error("Invalid input type %s. Valid types are: ",s);
+- for (i=0; inputtypes[i]; i++) msg.error(inputtypes[i]);
++ for (int i=0; inputtypes[i]; i++) msg.error(inputtypes[i]);
+  return 0;
+ }
+ 
+@@ -291,19 +293,3 @@ commandline::~commandline()
+  for (int i=0; i<numoptions; i++)  options[i].free();
+  free(options);
+ }
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+diff --git a/src-original/cpu.cpp b/src/cpu.cpp
+index b068c4b..51eaf1b 100644
+--- a/src-original/cpu.cpp
++++ b/src/cpu.cpp
+@@ -6,7 +6,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <malloc.h>
+-#include <process.h>
++// #include <process.h>
+ 
+ #include "dd.h"
+ 
+@@ -114,6 +114,3 @@ void m_pause()
+ 
+ //-----------------------------------------------------------
+ //-----------------------------------------------------------
+-
+-
+-
+diff --git a/src-original/file.cpp b/src/file.cpp
+index e1d5426..448ab36 100644
+--- a/src-original/file.cpp
++++ b/src/file.cpp
+@@ -1,7 +1,7 @@
+-#include <sys\types.h>
+-#include <sys\stat.h>
++// #include <sys\types.h>
++// #include <sys\stat.h>
+ #include <fcntl.h>
+-#include <io.h>
++// #include <io.h>
+ #include <malloc.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -11,7 +11,7 @@
+ 
+ #ifndef _MSC_VER
+ 
+-#include <dir.h>
++// #include <dir.h>
+ 
+ #ifdef __WATCOMC__
+ #include <dos.h>
+@@ -20,25 +20,25 @@
+ //dir shit
+ void enumdir(char *path, DIRFUNCPTR func,void *context)
+ {
+- #ifdef __BORLANDC__
+- ffblk ff;
+- int done=findfirst(path,&ff,0);
+- while (!done)
+-  {
+-   if (!func(ff.ff_name,context)) break;
+-   done=findnext(&ff);
+-  }
+- #endif
+- #ifdef __WATCOMC__
+- find_t ff;
+- int done=_dos_findfirst(path,0,&ff);
+- while (!done)
+-  {
+-   if (!func(ff.name,context)) break;
+-   done=_dos_findnext(&ff);
+-  }
+- _dos_findclose(&ff);
+- #endif
++ // #ifdef __BORLANDC__
++ // ffblk ff;
++ // int done=findfirst(path,&ff,0);
++ // while (!done)
++ //  {
++ //   if (!func(ff.ff_name,context)) break;
++ //   done=findnext(&ff);
++ //  }
++ // #endif
++ // #ifdef __WATCOMC__
++ // find_t ff;
++ // int done=_dos_findfirst(path,0,&ff);
++ // while (!done)
++ //  {
++ //   if (!func(ff.name,context)) break;
++ //   done=_dos_findnext(&ff);
++ //  }
++ // _dos_findclose(&ff);
++ // #endif
+ }
+ 
+ #endif
+@@ -52,58 +52,55 @@ void enumdir(char *path, DIRFUNCPTR func,void *context)
+ 
+ int FILEIO::open(char *filename)
+ {
+- if (h) close(); //already open
+- h=::open(filename,O_RDONLY|O_BINARY);
+- if (h==-1) {h=0; return -1;} //error
+-// if (h==0) msg.error("SHITTTTTTT!!!!!");
+- return 0;
++//  if (h) close(); //already open
++//  h=::open(filename,O_RDONLY|O_BINARY);
++//  if (h==-1) {h=0; return -1;} //error
++// // if (h==0) msg.error("SHITTTTTTT!!!!!");
++//  return 0;
+ }
+ 
+ int FILEIO::create(char *filename)
+ {
+- if (h) close();
+- #ifdef __WATCOMC__
+- h=::creat(filename,S_IWRITE);
+- #else creat
+- h=_rtl_creat(filename,0);
+- #endif
+- if (h==-1) {h=0; return -1;} //error
+- return 0;
++ // if (h) close();
++ // #ifdef __WATCOMC__
++ // h=::creat(filename,S_IWRITE);
++ // #else creat
++ // h=_rtl_creat(filename,0);
++ // #endif
++ // if (h==-1) {h=0; return -1;} //error
++ // return 0;
+ }
+ 
+ void FILEIO::close()
+ {
+- if (!h) return;
+- ::close(h);
+- h=0;
++ // if (!h) return;
++ // ::close(h);
++ // h=0;
+ }
+ 
+ int FILEIO::read(void *t,unsigned size)
+ {
+- if (!h) return -1;
+- return ::read(h,t,size)<size ? -1 : 0 ;
++ // if (!h) return -1;
++ // return ::read(h,t,size)<size ? -1 : 0 ;
+ }
+ 
+ int FILEIO::write(void *t,unsigned size)
+ {
+- if (!h) return -1;
+- return ::write(h,t,size)<size ? -1 : 0;
++ // if (!h) return -1;
++ // return ::write(h,t,size)<size ? -1 : 0;
+ }
+ 
+ unsigned FILEIO::size()
+ {
+- return h ? filelength(h) : 0;
++ // return h ? filelength(h) : 0;
+ }
+ 
+ unsigned FILEIO::getpos()
+ {
+- return h ? lseek(h,0,SEEK_CUR) : 0;
++ // return h ? lseek(h,0,SEEK_CUR) : 0;
+ }
+ 
+ void FILEIO::setpos(unsigned p)
+ {
+- if (h) lseek(h,p,SEEK_SET);
++ // if (h) lseek(h,p,SEEK_SET);
+ }
+-
+-
+-
+diff --git a/src-original/guimenu.h b/src/guimenu.h
+index aa68e04..b2a6f48 100644
+--- a/src-original/guimenu.h
++++ b/src/guimenu.h
+@@ -2,6 +2,8 @@
+ //           menu classes
+ //*************************************
+ 
++#define MAX_MENU_ITEMS 25
++
+ //menu item
+ typedef void (*MENUFUNCPTR)();
+ class menuitem
+@@ -22,7 +24,7 @@ public:
+ class menu
+ {
+ public:
+-class menuitem m[];
++class menuitem m[MAX_MENU_ITEMS];
+ int getnumitems(); //returns the number of items in menu
+ 
+ int getmaxwidth(); //returns the maximum width of all items
+@@ -110,4 +112,3 @@ class GUIpopupmenu:public GUIvmenu
+  virtual int release(mouse &m);
+  virtual void draw(char *dest);
+ };
+-
+diff --git a/src-original/input.cpp b/src/input.cpp
+index b28d79b..62924a2 100644
+--- a/src-original/input.cpp
++++ b/src/input.cpp
+@@ -1,6 +1,6 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+-#include <conio.h>
++// #include <conio.h>
+ 
+ #include "types.h"
+ #ifdef DOS
+@@ -11,8 +11,8 @@ extern "C" {
+ #endif
+ 
+ #ifdef WIN95
+-#include <windows.h>
+-#include <dinput.h>
++// #include <windows.h>
++// #include <dinput.h>
+ #endif
+ 
+ #include "input.h"
+@@ -174,6 +174,7 @@ class analogjoy1:public joystick
+ 
+  virtual void main()
+   {
++#ifdef JOYSTICK_INPUT
+    if (!installed) return;
+    if (rfrtime>=0) {rfrtime--; return;}
+                else rfrtime=2;
+@@ -187,6 +188,7 @@ class analogjoy1:public joystick
+    ReadAnalogJoyPos(joypos,1024);
+    pos.x=joypos[0]; pos.y=joypos[1]; buttons=ReadAnalogJoyButtons()&3;
+    #endif
++#endif
+   };
+ };
+ 
+@@ -199,6 +201,7 @@ class analogjoy2:public joystick
+ 
+  virtual void main()
+   {
++#ifdef JOYSTICK_INPUT
+    if (!installed) return;
+    if (rfrtime>=0) {rfrtime--; return;}
+                else rfrtime=2;
+@@ -212,6 +215,7 @@ class analogjoy2:public joystick
+    ReadAnalogJoyPos(joypos,1024);
+    pos.x=joypos[2]; pos.y=joypos[3]; buttons=(ReadAnalogJoyButtons()>>2)&3;
+    #endif
++#endif
+   };
+ };
+ 
+@@ -227,6 +231,7 @@ class gravis:public joystick
+ 
+  virtual void main()
+   {
++#ifdef JOYSTICK_INPUT
+    if (!installed) return;
+    if (rfrtime>=0) {rfrtime--; return;}
+                else rfrtime=3;
+@@ -242,6 +247,7 @@ class gravis:public joystick
+    pos.x=joypos[0]; pos.y=joypos[1];
+    buttons=gravtable[(ReadAnalogJoyButtons()&15)];
+    #endif
++#endif
+   };
+ };
+ unsigned char gravis::gravtable[]={0,1,4,5,2,3,6,7,8,9,12,13,10,11,14,15,};
+diff --git a/src-original/inputw.cpp b/src/inputw.cpp
+index 4e05e59..de318c1 100644
+--- a/src-original/inputw.cpp
++++ b/src/inputw.cpp
+@@ -228,7 +228,7 @@ class changeinputdevice:public GUIcontents
+ 
+   new GUIstatictext(this,1,"Test area:",125,3);
+   test=new inputtestarea(this,125,15,91,in);
+-  for (i=0; i<4; i++) b[i]=new inputtestbutton(this,127+i*23,110,18,10,in,i);
++  for (int i=0; i<4; i++) b[i]=new inputtestbutton(this,127+i*23,110,18,10,in,i);
+   lasto=0;
+ //  msg.printf(2,"in=%p in->o=%p",in,in ? in->o : 0);
+   if (in)
+@@ -354,7 +354,3 @@ DLGPOS changeinputdevice::pos;
+ 
+ void editinputdevice0() {changeinputdevice::open(0);}
+ void editinputdevice1() {changeinputdevice::open(1);}
+-
+-
+-
+-
+diff --git a/src-original/main.cpp b/src/main.cpp
+index fa5b454..96ad94f 100644
+--- a/src-original/main.cpp
++++ b/src/main.cpp
+@@ -3,9 +3,9 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdio.h>
+-#include <mem.h>
++// #include <mem.h>
+ #include <malloc.h>
+-#include <direct.h>
++// #include <direct.h>
+ 
+ #include "config.h"
+ 
+@@ -290,8 +290,3 @@ int cmd_runrom(char *p)
+  m_execute();
+  return 1;
+ }
+-
+-
+-
+-
+-
+diff --git a/src-original/nes.cpp b/src/nes.cpp
+index c14eb07..5f3fde3 100644
+--- a/src-original/nes.cpp
++++ b/src/nes.cpp
+@@ -4,7 +4,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <malloc.h>
+-#include <process.h>
++// #include <process.h>
+ 
+ #include "types.h"
+ 
+@@ -452,31 +452,3 @@ struct m6502MemoryWrite NESwrite[]=
+  {0x8000,0xFFFF, neswrite8000}, //rom
+  {(WORD) -1,(WORD) -1,NULL}
+ };
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+diff --git a/src-original/nesvideo.cpp b/src/nesvideo.cpp
+index 91c1324..4629e67 100644
+--- a/src-original/nesvideo.cpp
++++ b/src/nesvideo.cpp
+@@ -191,7 +191,7 @@ void pattern::refresh()
+   }
+ 
+  //create sprites
+- for (i=0; i<4; i++)
++ for (int i=0; i<4; i++)
+   {
+    sprite[i]=b; //copy bitmap
+    sprite[i].add_sprite(CBASE+16+(i<<2)); //add attribute and cbase
+diff --git a/src-original/nesvideo.h b/src/nesvideo.h
+index 32a290f..d2daa43 100644
+--- a/src-original/nesvideo.h
++++ b/src/nesvideo.h
+@@ -8,6 +8,7 @@ extern "C" {
+  void __cdecl draw_tile_asm(struct bitmap8x8 *b,char *dest,int x,int y);
+  void __cdecl draw_sprite_asm(struct bitmap8x8 *b,char *dest,int x,int y,int o);
+ };
++
+ #ifdef __WATCOMC__
+ #pragma aux draw_tile_asm modify[eax ecx edx];
+ #pragma aux draw_sprite_asm modify[eax ecx edx];
+diff --git a/src-original/r2img.cpp b/src/r2img.cpp
+index 7feea68..5d14c3a 100644
+--- a/src-original/r2img.cpp
++++ b/src/r2img.cpp
+@@ -1,13 +1,13 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <malloc.h>
+-#include <dos.h>
++// #include <dos.h>
+ #include <fcntl.h>
+-#include <io.h>
++// #include <io.h>
+ #include <string.h>
+-#include <conio.h>
++// #include <conio.h>
+ #include <ctype.h>
+-#include <direct.h>
++// #include <direct.h>
+ 
+ //functions for image
+ #include "r2img.h"
+@@ -517,17 +517,3 @@ void drawbox(char *d,int color,int x1,int y1,int x2,int y2)
+  //right
+  drawvline(d,color,x2-1,y1,y2);
+ }
+-  
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+diff --git a/src-original/r2img.h b/src/r2img.h
+index a3fa4e6..40d8cff 100644
+--- a/src-original/r2img.h
++++ b/src/r2img.h
+@@ -39,10 +39,11 @@ struct COLOR
+  void fade(COLOR &d,int level);
+ };
+ 
++#define MAX_PALTETTE_SIZE 256
+ //palette
+ struct PALETTE
+ {
+- COLOR c[]; //colors in palette
++ COLOR c[MAX_PALTETTE_SIZE]; //colors in palette
+ 
+ // void set(int first,int num) {loadpalette((COLOR *)&c,first,num);}
+  PALETTE *duplicate(int num);
+@@ -117,5 +118,3 @@ SCR *loadscreen(char *file);
+ 
+ //reads uncompressed bitmap from a .BBM or .LBM file
+ SCR *ReadLBMFile(char *file);
+-
+-
+diff --git a/src-original/rom.cpp b/src/rom.cpp
+index 51cd48d..a7f8f3c 100644
+--- a/src-original/rom.cpp
++++ b/src/rom.cpp
+@@ -4,7 +4,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <malloc.h>
+-#include <process.h>
++// #include <process.h>
+ 
+ #include "types.h"
+ 
+@@ -169,7 +169,3 @@ void NESROMHEADER::printinfo()
+  msg.printf(1,"MMC #%d: %s",banktype,banktypestr[banktype]);
+ }
+ //-----------------------------------------------
+-
+-
+-
+-
+diff --git a/src-original/stddlg.cpp b/src/stddlg.cpp
+index 6f26436..fcb29c7 100644
+--- a/src-original/stddlg.cpp
++++ b/src/stddlg.cpp
+@@ -162,12 +162,12 @@ void res1024x768() {setres(1024,768);}
+ 
+ void m_heapcheck()
+ {
+-  switch(_heapset(0x69))
+-  {
+-   case _HEAPBADNODE: msg.printf(5,"ERROR: Bad heap node"); return;
+-   case _HEAPEMPTY: msg.printf(5,"ERROR: Heap empty"); return;
+-   case _HEAPOK: msg.printf(1,"Heap OK"); return;
+-  };
++  // switch(_heapset(0x69))
++  // {
++  //  case _HEAPBADNODE: msg.printf(5,"ERROR: Bad heap node"); return;
++  //  case _HEAPEMPTY: msg.printf(5,"ERROR: Heap empty"); return;
++  //  case _HEAPOK: msg.printf(1,"Heap OK"); return;
++  // };
+ }
+ 
+ 
+@@ -354,9 +354,3 @@ void initdefaultgui()
+  gmenu=new GUIhmenu(guiroot,&mainmenu,0,0);
+  enablegui();
+ }
+-
+-
+-
+-
+-
+-
+diff --git a/src-original/vol.cpp b/src/vol.cpp
+index 51a4e23..1ae66d4 100644
+--- a/src-original/vol.cpp
++++ b/src/vol.cpp
+@@ -2,8 +2,9 @@
+ //volume file manager
+ #include <string.h>
+ #include <stdio.h>
+-#include <conio.h>
+ #include <stdlib.h>
++#include <strings.h>
++#define stricmp strcasecmp
+ 
+ #include "vol.h"
+ #include "volbatch.h"
+@@ -158,20 +159,22 @@ if (vdiagnose)
+ void GetFileName(char *fullname, char *name)
+ {
+  if (!fullname) {name[0]=0; return;}
+- for (int i=0; fullname[i] && fullname[i]!='.'; i++); //find period
++ int i,j;
++ for (i=0; fullname[i] && fullname[i]!='.'; i++); //find period
+  int p=i; //period location
+  for ( ; i>0 && fullname[i]!='\\'; i--); //find beginning of name
+  if (i>0) i++;
+- for (int j=0; i<p; i++,j++) name[j]=fullname[i]; //copy name
++ for (j=0; i<p; i++,j++) name[j]=fullname[i]; //copy name
+  name[j]=0;
+ }
+ 
+ void GetFileExtension(char *fullname, char *ext)
+ {
+- for (int i=0; fullname[i] && fullname[i]!='.'; i++); //find period
++ int i,j;
++ for (i=0; fullname[i] && fullname[i]!='.'; i++); //find period
+  if (!fullname[i]) {ext[0]=0; return;} //no period found
+  i++;
+- for (int j=0; j<3; j++,i++) ext[j]=fullname[i];
++ for (j=0; j<3; j++,i++) ext[j]=fullname[i];
+  ext[j]=0;
+ }
+ 
+@@ -231,8 +234,3 @@ void volbatch::print()
+ // for (int i=0; i<num; i++)
+ //  printf("#%d: %p\n",i,p[i]);
+ }
+-
+-
+-
+-
+-
+diff --git a/src-original/win95/dx.cpp b/src/win95/dx.cpp
+index 7d31940..41dc717 100644
+--- a/src-original/win95/dx.cpp
++++ b/src/win95/dx.cpp
+@@ -1,6 +1,6 @@
+ #define INITGUID
+ //#define WIN32_LEAN_AND_MEAN
+-#include <windows.h>
++// #include <windows.h>
+ #ifndef _WIN32
+ #define _WIN32
+ #endif
+@@ -13,8 +13,8 @@
+ //#define TIMERCALLBACK
+ 
+ #include <stdio.h>
+-#include <ddraw.h>
+-#include <dsound.h>
++// #include <ddraw.h>
++// #include <dsound.h>
+ 
+ #include "r2img.h"
+ #include "dd.h"
+@@ -34,6 +34,9 @@
+ 
+ #include "timing.h"
+ 
++typedef int HWND;
++int hwnd = -1;
++
+ //functions that need to be supplied by the game
+ int  initgame();
+ void updatescreen();
+@@ -42,120 +45,122 @@ void gametimer();
+ 
+ int PITCH=0;
+ 
+-DWORD playMIDIFile(HWND hWndNotify, LPSTR lpszMIDIFileName);
++// DWORD playMIDIFile(HWND hWndNotify, LPSTR lpszMIDIFileName);
+ 
+ 
+ //Global variables and shit
+-extern char appname[];
+-extern char configfile[];
+-HINSTANCE hInst;
+-
+-//direct draw objects
+-LPDIRECTDRAW DDO1       =0;
+-LPDIRECTDRAW2 DDO       =0;
+-
+-LPDIRECTDRAWSURFACE ddprimary=0;  //DD primary surface
+-LPDIRECTDRAWSURFACE ddbackbuffer=0,ddoff=0;  //DD backbuffer surface
+-LPDIRECTDRAWPALETTE ddpalette=0; //DD palette
+-PALETTEENTRY palentries[256]; //palette entries for all colors
+-
+-int surfacelost=0; //count of surfaces lost
+-
+-//direct sound objects
+-LPDIRECTSOUND DSOUND=0; //directsound object
+-PCMWAVEFORMAT pcmwf; //wave format of sounds
+-LPDIRECTSOUNDBUFFER dsprimary; //primary sound buffer
+-
+-//window handle
+-HWND        hwnd ;
+-//window function
+-LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM) ;
+-
+-//timer stuff
+-UINT timerid=0;
+-static DWORD lasttime;
+-static int lastgettime;
+-int timeperframe;
+-
+-BOOL  ActiveApp; //Is this program active?
+-char *video;   // Pointer to video memory
+-char *screen; // Pointer to virtual screen
+-
+-
+-//mouse
+-mouse m;
+-
+-//commandline
+-commandline *cline;
++// extern char appname[];
++// extern char configfile[];
++// HINSTANCE hInst;
++//
++// //direct draw objects
++// LPDIRECTDRAW DDO1       =0;
++// LPDIRECTDRAW2 DDO       =0;
++//
++// LPDIRECTDRAWSURFACE ddprimary=0;  //DD primary surface
++// LPDIRECTDRAWSURFACE ddbackbuffer=0,ddoff=0;  //DD backbuffer surface
++// LPDIRECTDRAWPALETTE ddpalette=0; //DD palette
++// PALETTEENTRY palentries[256]; //palette entries for all colors
++//
++// int surfacelost=0; //count of surfaces lost
++//
++// //direct sound objects
++// LPDIRECTSOUND DSOUND=0; //directsound object
++// PCMWAVEFORMAT pcmwf; //wave format of sounds
++// LPDIRECTSOUNDBUFFER dsprimary; //primary sound buffer
++//
++// //window handle
++// HWND        hwnd ;
++// //window function
++// LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM) ;
++//
++// //timer stuff
++// UINT timerid=0;
++// static DWORD lasttime;
++// static int lastgettime;
++// int timeperframe;
++//
++// BOOL  ActiveApp; //Is this program active?
++// char *video;   // Pointer to video memory
++// char *screen; // Pointer to virtual screen
++//
++//
++// //mouse
++// mouse m;
++//
++// //commandline
++// commandline *cline;
+ 
+ //message box printf
+ void winprintf(char *format, ...)
+ {
+-char s[200];
+- va_list argptr;
+- va_start(argptr,format);
+- vsprintf(s,format,argptr);
+- va_end(argptr);
+-MessageBox(hwnd,s,appname,MB_OK|MB_SETFOREGROUND);
++// char s[200];
++//  va_list argptr;
++//  va_start(argptr,format);
++//  vsprintf(s,format,argptr);
++//  va_end(argptr);
++// MessageBox(hwnd,s,appname,MB_OK|MB_SETFOREGROUND);
+ }
+ 
+ 
+ char errstr[80];
+ void cleanexit(int x)
+ {
+- x=x;
+- DestroyWindow( hwnd);
++ // x=x;
++ // DestroyWindow( hwnd);
+ }
+ 
+ //sets the video mode
+ int setddrawmode(int xw,int yw)
+ {
+- if (!DDO) return -1;
+-
+- //set video mode
+- HRESULT err;
+- if ((err=DDO->SetDisplayMode(xw,yw,8,0,0))!=DD_OK) return err;
+-
+- SCREENX=xw; SCREENY=yw;
+-
+- //clip cursor
+- RECT r;
+- r.left=0; r.right=SCREENX;
+- r.top=0; r.bottom=SCREENY;
+- ClipCursor(&r);
+- return 0;
++ // if (!DDO) return -1;
++ //
++ // //set video mode
++ // HRESULT err;
++ // if ((err=DDO->SetDisplayMode(xw,yw,8,0,0))!=DD_OK) return err;
++ //
++ // SCREENX=xw; SCREENY=yw;
++ //
++ // //clip cursor
++ // RECT r;
++ // r.left=0; r.right=SCREENX;
++ // r.top=0; r.bottom=SCREENY;
++ // ClipCursor(&r);
++ // return 0;
++ return -1;
+ }
+ 
+ //creates primary and backbuffer ddraw surfaces
+ int createsurfaces()
+ {
+- if (!DDO) return -1;
+-  //create surface(s)
+- DDSURFACEDESC   ddsd;
+- memset(&ddsd,0,sizeof(ddsd));
+- ddsd.dwSize = sizeof ( ddsd );
+- ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+- ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
+- ddsd.dwBackBufferCount=2; //1;
+- HRESULT err;
+- if ((err=DDO->CreateSurface( &ddsd,&ddprimary, NULL ))!=DD_OK)
+-  {msg.error("Unable to create ddraw primary surface"); return -3;}
+-
+-  //get pointer to backbuffer
+- DDSCAPS ddscaps;
+- ddscaps.dwCaps=DDSCAPS_BACKBUFFER;
+- if (ddprimary->GetAttachedSurface(&ddscaps,&ddbackbuffer)!=DD_OK) return -4;
+-
+- //set palette
+- ddprimary->SetPalette(ddpalette);
+-
+- return 0;
++ // if (!DDO) return -1;
++ //  //create surface(s)
++ // DDSURFACEDESC   ddsd;
++ // memset(&ddsd,0,sizeof(ddsd));
++ // ddsd.dwSize = sizeof ( ddsd );
++ // ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
++ // ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX;
++ // ddsd.dwBackBufferCount=2; //1;
++ // HRESULT err;
++ // if ((err=DDO->CreateSurface( &ddsd,&ddprimary, NULL ))!=DD_OK)
++ //  {msg.error("Unable to create ddraw primary surface"); return -3;}
++ //
++ //  //get pointer to backbuffer
++ // DDSCAPS ddscaps;
++ // ddscaps.dwCaps=DDSCAPS_BACKBUFFER;
++ // if (ddprimary->GetAttachedSurface(&ddscaps,&ddbackbuffer)!=DD_OK) return -4;
++ //
++ // //set palette
++ // ddprimary->SetPalette(ddpalette);
++ //
++ // return 0;
++ return -1;
+ }
+ 
+ void releasesurfaces()
+ {
+- if (ddbackbuffer) {ddbackbuffer->Release(); ddbackbuffer=0;}
+- if (ddprimary) {ddprimary->Release(); ddprimary=0;}
++ // if (ddbackbuffer) {ddbackbuffer->Release(); ddbackbuffer=0;}
++ // if (ddprimary) {ddprimary->Release(); ddprimary=0;}
+ }
+ 
+ void terminateddraw();
+@@ -163,294 +168,297 @@ void terminateddraw();
+ //returns <0 on failure
+ int initddraw(HWND hwnd)
+ {
+- HRESULT err;
+-
+- //create ddraw object
+- if (DirectDrawCreate(NULL,&DDO1,NULL)!=DD_OK ||
+-     DDO1->QueryInterface(IID_IDirectDraw2, (LPVOID *) &DDO)!=DD_OK)
+-   {
+-    msg.error("Unable to create DirectDraw object");
++ // HRESULT err;
++ //
++ // //create ddraw object
++ // if (DirectDrawCreate(NULL,&DDO1,NULL)!=DD_OK ||
++ //     DDO1->QueryInterface(IID_IDirectDraw2, (LPVOID *) &DDO)!=DD_OK)
++ //   {
++ //    msg.error("Unable to create DirectDraw object");
++ //    return -1;
++ //   }
++ //
++ //  //set cooperative mode
++ // if ((err=DDO->SetCooperativeLevel( hwnd,
++ //  DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWMODEX|DDSCL_ALLOWREBOOT))!=DD_OK) return err;
++ //
++ // //set video mode
++ // if (setddrawmode(SCREENX,SCREENY))
++ //  {msg.error("Unable to set ddraw video mode"); return -1;}
++ //
++ // //create palette
++ // DDO->CreatePalette(DDPCAPS_8BIT|DDPCAPS_ALLOW256,palentries,&ddpalette,0);
++ //
++ // //create surfaces
++ // if (createsurfaces()) return -1;
++ //
++ // msg.printf(2,"DirectDraw initialized. %dx%dx%d",SCREENX,SCREENY,8);
++ //
++ // return 0;
+  return -1;
+ }
+ 
+-  //set cooperative mode
+- if ((err=DDO->SetCooperativeLevel( hwnd,
+-  DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWMODEX|DDSCL_ALLOWREBOOT))!=DD_OK) return err;
+-
+- //set video mode
+- if (setddrawmode(SCREENX,SCREENY))
+-  {msg.error("Unable to set ddraw video mode"); return -1;}
+-
+- //create palette
+- DDO->CreatePalette(DDPCAPS_8BIT|DDPCAPS_ALLOW256,palentries,&ddpalette,0);
+-
+- //create surfaces
+- if (createsurfaces()) return -1;
+-
+- msg.printf(2,"DirectDraw initialized. %dx%dx%d",SCREENX,SCREENY,8);
+-
+- return 0;
+-}
+-
+ void terminateddraw()
+ {
+- if (!DDO) return;
+- releasesurfaces();
+- if (ddpalette) {ddpalette->Release(); ddpalette=0;} //free palette
+-
+-   //free ddraw objects
+- DDO->RestoreDisplayMode();
+- DDO->Release(); DDO=0;
+- DDO1->Release(); DDO1=0;
+-
+- ClipCursor(0);
++ // if (!DDO) return;
++ // releasesurfaces();
++ // if (ddpalette) {ddpalette->Release(); ddpalette=0;} //free palette
++ //
++ //   //free ddraw objects
++ // DDO->RestoreDisplayMode();
++ // DDO->Release(); DDO=0;
++ // DDO1->Release(); DDO1=0;
++ //
++ // ClipCursor(0);
+ }
+ 
+ void setpalette(PALETTE *pal)
+ {
+- //copy from color format to palleteentry format
+- for (int i=0; i<256; i++)
+-  {
+-   palentries[i].peRed=pal->c[i].r;
+-   palentries[i].peGreen=pal->c[i].g;
+-   palentries[i].peBlue=pal->c[i].b;
+-   palentries[i].peFlags=0;
+-  }
+- ddpalette->SetEntries(0,0,256,palentries);
+- ddprimary->SetPalette(ddpalette);
++ // //copy from color format to palleteentry format
++ // for (int i=0; i<256; i++)
++ //  {
++ //   palentries[i].peRed=pal->c[i].r;
++ //   palentries[i].peGreen=pal->c[i].g;
++ //   palentries[i].peBlue=pal->c[i].b;
++ //   palentries[i].peFlags=0;
++ //  }
++ // ddpalette->SetEntries(0,0,256,palentries);
++ // ddprimary->SetPalette(ddpalette);
+ }
+ 
+ //set individual palette index
+ void setpalettenum(int index,COLOR *c)
+ {
+- PALETTEENTRY p;
+- p.peRed=c->r;
+- p.peGreen=c->g;
+- p.peBlue=c->b;
+- p.peFlags=0;
+-
+- ddpalette->SetEntries(0,index,1,&p);
+-// msg.printf(1,"palentry[%d]=%d,%d,%d",index,c->r,c->g,c->b);
++//  PALETTEENTRY p;
++//  p.peRed=c->r;
++//  p.peGreen=c->g;
++//  p.peBlue=c->b;
++//  p.peFlags=0;
++//
++//  ddpalette->SetEntries(0,index,1,&p);
++// // msg.printf(1,"palentry[%d]=%d,%d,%d",index,c->r,c->g,c->b);
+ }
+ 
+ 
+ void ddrawinfo()
+ {
+- if (!DDO) return;
+- int totalmem,freemem;
+- DDSCAPS caps;
+- memset(&caps,0,sizeof(caps));
+-// caps.dwCaps=DDSCAPS_SURFACE;
+-
+- DDO->GetAvailableVidMem(&caps,(LPDWORD)&totalmem,(LPDWORD)&freemem);
+- msg.printf(2,"Total vid mem: %dK",totalmem/1024);
+- msg.printf(2,"Free vid mem: %dK",freemem/1024);
+-
+- DDCAPS driver,hel;
+- memset(&driver,0,sizeof(DDCAPS));
+- driver.dwSize=sizeof(driver);
+- memset(&hel,0,sizeof(DDCAPS));
+- hel.dwSize=sizeof(hel);
+-
+- DDO->GetCaps(&driver,&hel);
+- msg.printf(2,"Hardware BLT: %s",(driver.dwCaps&DDCAPS_BLT) ? "yes" : "no");
+- msg.printf(2,"Hardware color fill: %s",(driver.dwCaps&DDCAPS_BLTCOLORFILL) ? "yes" : "no");
+- msg.printf(2,"Bank Switched: %s",(driver.dwCaps&DDCAPS_BANKSWITCHED) ? "yes" : "no");
+-
+- memset(&caps,0,sizeof(caps));
+- ddprimary->GetCaps(&caps);
+- msg.printf(2,"Primary surface: %s",(caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "video memory" : "system memory");
+-
+- memset(&caps,0,sizeof(caps));
+- ddbackbuffer->GetCaps(&caps);
+- msg.printf(2,"Backbuffer surface: %s",(caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "video memory" : "system memory");
++//  if (!DDO) return;
++//  int totalmem,freemem;
++//  DDSCAPS caps;
++//  memset(&caps,0,sizeof(caps));
++// // caps.dwCaps=DDSCAPS_SURFACE;
++//
++//  DDO->GetAvailableVidMem(&caps,(LPDWORD)&totalmem,(LPDWORD)&freemem);
++//  msg.printf(2,"Total vid mem: %dK",totalmem/1024);
++//  msg.printf(2,"Free vid mem: %dK",freemem/1024);
++//
++//  DDCAPS driver,hel;
++//  memset(&driver,0,sizeof(DDCAPS));
++//  driver.dwSize=sizeof(driver);
++//  memset(&hel,0,sizeof(DDCAPS));
++//  hel.dwSize=sizeof(hel);
++//
++//  DDO->GetCaps(&driver,&hel);
++//  msg.printf(2,"Hardware BLT: %s",(driver.dwCaps&DDCAPS_BLT) ? "yes" : "no");
++//  msg.printf(2,"Hardware color fill: %s",(driver.dwCaps&DDCAPS_BLTCOLORFILL) ? "yes" : "no");
++//  msg.printf(2,"Bank Switched: %s",(driver.dwCaps&DDCAPS_BANKSWITCHED) ? "yes" : "no");
++//
++//  memset(&caps,0,sizeof(caps));
++//  ddprimary->GetCaps(&caps);
++//  msg.printf(2,"Primary surface: %s",(caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "video memory" : "system memory");
++//
++//  memset(&caps,0,sizeof(caps));
++//  ddbackbuffer->GetCaps(&caps);
++//  msg.printf(2,"Backbuffer surface: %s",(caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "video memory" : "system memory");
+ }
+ 
+ 
+ void changeresolution(int xw,int yw)
+ {
+- if (!DDO) return;
+-
+- releasesurfaces();
+- if (setddrawmode(xw,yw))
+-  {
+-  msg.error("%dx%d mode not supported",xw,yw);
+-   setddrawmode(SCREENX,SCREENY);
+-  }
+- createsurfaces();
+-
+- msg.printf(2,"DirectDraw mode set: %dx%dx%d",SCREENX,SCREENY,8);
++ // if (!DDO) return;
++ //
++ // releasesurfaces();
++ // if (setddrawmode(xw,yw))
++ //  {
++ //  msg.error("%dx%d mode not supported",xw,yw);
++ //   setddrawmode(SCREENX,SCREENY);
++ //  }
++ // createsurfaces();
++ //
++ // msg.printf(2,"DirectDraw mode set: %dx%dx%d",SCREENX,SCREENY,8);
+ }
+ 
+ //initialize direct sound
+ int initdsound(HWND hwnd)
+ {
+- HRESULT err;
+- //create directsound object
+- if ((err=DirectSoundCreate(NULL,&DSOUND,NULL))!=DS_OK)
+-   {DSOUND=0; return err;}
+-
+- DSOUND->SetCooperativeLevel(hwnd, DSSCL_EXCLUSIVE);
+-
+- //get caps
+- DSCAPS dscaps;
+- dscaps.dwSize=sizeof(dscaps);
+- if ((err=DSOUND->GetCaps(&dscaps))!=DS_OK)
+-  {DSOUND=0; return err;}
+-
+- // Set up primary sound wave format structure.
+- memset(&pcmwf, 0, sizeof(PCMWAVEFORMAT));
+- pcmwf.wf.wFormatTag = WAVE_FORMAT_PCM;
+- pcmwf.wf.nChannels = 2;
+- pcmwf.wf.nSamplesPerSec = SOUNDFREQ;
+- #ifdef DS8BIT
+- pcmwf.wf.nBlockAlign = 2;
+- pcmwf.wBitsPerSample =8;
+- #else
+- pcmwf.wf.nBlockAlign =4;
+- pcmwf.wBitsPerSample =16;
+- #endif
+- pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
+-
+- //create primary sound buffer
+- DSBUFFERDESC dsbdesc;
+- memset(&dsbdesc, 0, sizeof(DSBUFFERDESC)); // Zero it out.
+- dsbdesc.dwSize = sizeof(DSBUFFERDESC);
+- dsbdesc.dwFlags = DSBCAPS_PRIMARYBUFFER;
+- dsbdesc.dwBufferBytes = 0;
+- dsbdesc.lpwfxFormat = NULL;
+- err = DSOUND->CreateSoundBuffer(&dsbdesc, &dsprimary, NULL);
+- if (err!=DS_OK)
+-  {msg.error("Unable to create primary sound buffer"); DSOUND=0; return -1;}
+- err=dsprimary->SetFormat((LPWAVEFORMATEX)&pcmwf); //set primary wave format
+- if (err!=DS_OK)
+-  {
+-   pcmwf.wf.nChannels = 1;
+-   pcmwf.wf.nBlockAlign =1;
+-   pcmwf.wBitsPerSample =8;
+-   pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
+-   err=dsprimary->SetFormat((LPWAVEFORMATEX)&pcmwf); //set primary wave format
+-
+-   if (err!=DS_OK)
+-    {msg.error("Unable to set primary wave format");  return -1;}
+-  }
+-
+- dsprimary->Play(0,0,0);
+-
+- DWORD pcmsize;
+- dsprimary->GetFormat((LPWAVEFORMATEX)&pcmwf,sizeof(pcmwf),&pcmsize);
+-
+- msg.printf(2,"DirectSound initialized %dhz %dbit %s",pcmwf.wf.nSamplesPerSec,pcmwf.wBitsPerSample,
+-    pcmwf.wf.nChannels==1 ? "mono" : "stereo");
+-
+-
+-  // Set up wave format structure for secondary sounds.
+- memset(&pcmwf, 0, sizeof(PCMWAVEFORMAT));
+- pcmwf.wf.wFormatTag = WAVE_FORMAT_PCM;
+- pcmwf.wf.nChannels = 1;
+- pcmwf.wf.nSamplesPerSec = SOUNDFREQ;
+- pcmwf.wf.nBlockAlign = 1;
+- pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
+- pcmwf.wBitsPerSample =8;
+- return 0;
++ // HRESULT err;
++ // //create directsound object
++ // if ((err=DirectSoundCreate(NULL,&DSOUND,NULL))!=DS_OK)
++ //   {DSOUND=0; return err;}
++ //
++ // DSOUND->SetCooperativeLevel(hwnd, DSSCL_EXCLUSIVE);
++ //
++ // //get caps
++ // DSCAPS dscaps;
++ // dscaps.dwSize=sizeof(dscaps);
++ // if ((err=DSOUND->GetCaps(&dscaps))!=DS_OK)
++ //  {DSOUND=0; return err;}
++ //
++ // // Set up primary sound wave format structure.
++ // memset(&pcmwf, 0, sizeof(PCMWAVEFORMAT));
++ // pcmwf.wf.wFormatTag = WAVE_FORMAT_PCM;
++ // pcmwf.wf.nChannels = 2;
++ // pcmwf.wf.nSamplesPerSec = SOUNDFREQ;
++ // #ifdef DS8BIT
++ // pcmwf.wf.nBlockAlign = 2;
++ // pcmwf.wBitsPerSample =8;
++ // #else
++ // pcmwf.wf.nBlockAlign =4;
++ // pcmwf.wBitsPerSample =16;
++ // #endif
++ // pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
++ //
++ // //create primary sound buffer
++ // DSBUFFERDESC dsbdesc;
++ // memset(&dsbdesc, 0, sizeof(DSBUFFERDESC)); // Zero it out.
++ // dsbdesc.dwSize = sizeof(DSBUFFERDESC);
++ // dsbdesc.dwFlags = DSBCAPS_PRIMARYBUFFER;
++ // dsbdesc.dwBufferBytes = 0;
++ // dsbdesc.lpwfxFormat = NULL;
++ // err = DSOUND->CreateSoundBuffer(&dsbdesc, &dsprimary, NULL);
++ // if (err!=DS_OK)
++ //  {msg.error("Unable to create primary sound buffer"); DSOUND=0; return -1;}
++ // err=dsprimary->SetFormat((LPWAVEFORMATEX)&pcmwf); //set primary wave format
++ // if (err!=DS_OK)
++ //  {
++ //   pcmwf.wf.nChannels = 1;
++ //   pcmwf.wf.nBlockAlign =1;
++ //   pcmwf.wBitsPerSample =8;
++ //   pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
++ //   err=dsprimary->SetFormat((LPWAVEFORMATEX)&pcmwf); //set primary wave format
++ //
++ //   if (err!=DS_OK)
++ //    {msg.error("Unable to set primary wave format");  return -1;}
++ //  }
++ //
++ // dsprimary->Play(0,0,0);
++ //
++ // DWORD pcmsize;
++ // dsprimary->GetFormat((LPWAVEFORMATEX)&pcmwf,sizeof(pcmwf),&pcmsize);
++ //
++ // msg.printf(2,"DirectSound initialized %dhz %dbit %s",pcmwf.wf.nSamplesPerSec,pcmwf.wBitsPerSample,
++ //    pcmwf.wf.nChannels==1 ? "mono" : "stereo");
++ //
++ //
++ //  // Set up wave format structure for secondary sounds.
++ // memset(&pcmwf, 0, sizeof(PCMWAVEFORMAT));
++ // pcmwf.wf.wFormatTag = WAVE_FORMAT_PCM;
++ // pcmwf.wf.nChannels = 1;
++ // pcmwf.wf.nSamplesPerSec = SOUNDFREQ;
++ // pcmwf.wf.nBlockAlign = 1;
++ // pcmwf.wf.nAvgBytesPerSec = pcmwf.wf.nSamplesPerSec * pcmwf.wf.nBlockAlign;
++ // pcmwf.wBitsPerSample =8;
++ // return 0;
++ return -1;
+ }
+ 
+ void terminatedsound()
+ {
+- if (!DSOUND) return;
+- dsprimary->Release();
+- DSOUND->Release();
+- DSOUND=0;
++ // if (!DSOUND) return;
++ // dsprimary->Release();
++ // DSOUND->Release();
++ // DSOUND=0;
+ }
+ 
+ 
+  //creates a directsound buffer from existing old SOUND format
+ LPDIRECTSOUNDBUFFER createdsoundbuffer(struct SOUND *s)
+ {
+-  if (!DSOUND) return 0;
+-  HRESULT err;
+-
+-  // Set up DSBUFFERDESC structure.
+-  DSBUFFERDESC dsbdesc;
+-  memset(&dsbdesc, 0, sizeof(DSBUFFERDESC)); // Zero it out.
+-  dsbdesc.dwSize = sizeof(DSBUFFERDESC);
+-  dsbdesc.dwFlags = DSBCAPS_CTRLPAN; //DSBCAPS_STATIC | DSBCAPS_CTRLPAN;
+-  dsbdesc.dwBufferBytes = s->soundsize;
+-  dsbdesc.lpwfxFormat = (LPWAVEFORMATEX)&pcmwf;
+-
+-  // Create buffer.
+-  LPDIRECTSOUNDBUFFER dsb;
+-  err = DSOUND->CreateSoundBuffer(&dsbdesc, &dsb, NULL);
+-  if (err!=DS_OK)  return 0;
+-
+-  //lock memory
+-  LPVOID b,b2;
+-  DWORD size,size2;
+-  err=dsb->Lock(0,s->soundsize,&b,&size,&b2,&size2,0);
+-  for (int i=0; i<size; i++) ((char *)b)[i]=s->soundptr[i]+0x80;
+-  dsb->Unlock(b,size,b2,size2);
+-  return dsb;
++  // if (!DSOUND) return 0;
++  // HRESULT err;
++  //
++  // // Set up DSBUFFERDESC structure.
++  // DSBUFFERDESC dsbdesc;
++  // memset(&dsbdesc, 0, sizeof(DSBUFFERDESC)); // Zero it out.
++  // dsbdesc.dwSize = sizeof(DSBUFFERDESC);
++  // dsbdesc.dwFlags = DSBCAPS_CTRLPAN; //DSBCAPS_STATIC | DSBCAPS_CTRLPAN;
++  // dsbdesc.dwBufferBytes = s->soundsize;
++  // dsbdesc.lpwfxFormat = (LPWAVEFORMATEX)&pcmwf;
++  //
++  // // Create buffer.
++  // LPDIRECTSOUNDBUFFER dsb;
++  // err = DSOUND->CreateSoundBuffer(&dsbdesc, &dsb, NULL);
++  // if (err!=DS_OK)  return 0;
++  //
++  // //lock memory
++  // LPVOID b,b2;
++  // DWORD size,size2;
++  // err=dsb->Lock(0,s->soundsize,&b,&size,&b2,&size2,0);
++  // for (int i=0; i<size; i++) ((char *)b)[i]=s->soundptr[i]+0x80;
++  // dsb->Unlock(b,size,b2,size2);
++  // return dsb;
++  return -1;
+ }
+ 
+ 
+ void playsoundlooped(struct SOUND *s)
+ {
+- if (!DSOUND) return;
+- static LPDIRECTSOUNDBUFFER dsb=0;
+- if (dsb) freesound(dsb); dsb=0;
+-
+- dsb=createdsoundbuffer(s);
+- if (dsb) dsb->Play(0,0,DSBPLAY_LOOPING);
++ // if (!DSOUND) return;
++ // static LPDIRECTSOUNDBUFFER dsb=0;
++ // if (dsb) freesound(dsb); dsb=0;
++ //
++ // dsb=createdsoundbuffer(s);
++ // if (dsb) dsb->Play(0,0,DSBPLAY_LOOPING);
+ }
+ 
+ void playsound(struct IDirectSoundBuffer *dsb,int pan)
+ {
+- if (!DSOUND) return;
+- static LPDIRECTSOUNDBUFFER dscache[8]={0,0,0,0,0,0,0,0};
+-
+- //find free cache
+- for (int i=0; dscache[i] && i<8; i++);
+-
+- if (i==8)
+-  {
+-   //clear cache of stopped buffers
+-   for (i=0; i<8; i++)
+-    {
+-     DWORD status;
+-     dscache[i]->GetStatus(&status);
+-     if (!(status&DSBSTATUS_PLAYING))    //if not playing...
+-      {dscache[i]->Release(); dscache[i]=0;} //free it!
+-    }
+-   //find free cache (again)
+-   for (i=0; dscache[i] && i<8; i++);
+-   if (i==8) return; //still full, return
+-  }
+- //duplicate original sound
+- DSOUND->DuplicateSoundBuffer(dsb,&dscache[i]);
+- if (!dscache[i]) return;
+- if (pan>10000) pan=10000;
+- if (pan<-10000) pan=-10000;
+-
+- dscache[i]->SetPan(pan);
+- dscache[i]->Play(0,0,0);
++ // if (!DSOUND) return;
++ // static LPDIRECTSOUNDBUFFER dscache[8]={0,0,0,0,0,0,0,0};
++ //
++ // //find free cache
++ // for (int i=0; dscache[i] && i<8; i++);
++ //
++ // if (i==8)
++ //  {
++ //   //clear cache of stopped buffers
++ //   for (i=0; i<8; i++)
++ //    {
++ //     DWORD status;
++ //     dscache[i]->GetStatus(&status);
++ //     if (!(status&DSBSTATUS_PLAYING))    //if not playing...
++ //      {dscache[i]->Release(); dscache[i]=0;} //free it!
++ //    }
++ //   //find free cache (again)
++ //   for (i=0; dscache[i] && i<8; i++);
++ //   if (i==8) return; //still full, return
++ //  }
++ // //duplicate original sound
++ // DSOUND->DuplicateSoundBuffer(dsb,&dscache[i]);
++ // if (!dscache[i]) return;
++ // if (pan>10000) pan=10000;
++ // if (pan<-10000) pan=-10000;
++ //
++ // dscache[i]->SetPan(pan);
++ // dscache[i]->Play(0,0,0);
+ }
+ 
+ void freesound(struct IDirectSoundBuffer *dsb)
+ {
+- if (!DSOUND) return;
+- dsb->Release();
++ // if (!DSOUND) return;
++ // dsb->Release();
+ }
+ 
+ int getsoundsize(struct IDirectSoundBuffer *dsb)
+ {
+- if (!dsb) return 0;
+- DSBCAPS caps;
+- memset(&caps,0,sizeof(caps));
+- caps.dwSize=sizeof(caps);
+- HRESULT err=dsb->GetCaps(&caps);
+-// msg.printf(2,"soundsize=%d err=%X",caps.dwBufferBytes,err);
+- return caps.dwBufferBytes;
+-
++//  if (!dsb) return 0;
++//  DSBCAPS caps;
++//  memset(&caps,0,sizeof(caps));
++//  caps.dwSize=sizeof(caps);
++//  HRESULT err=dsb->GetCaps(&caps);
++// // msg.printf(2,"soundsize=%d err=%X",caps.dwBufferBytes,err);
++//  return caps.dwBufferBytes;
++ return 0;
+ }
+ 
+ 
+@@ -460,13 +468,13 @@ volatile int timerbusy=0,timerdisabled=0;
+ void disable() {timerdisabled=1;}
+ void enable() {timerdisabled=0;}
+ 
+-void CALLBACK mmtimer(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1,DWORD dw2)
+-{
+- if (timerbusy || timerdisabled || !ActiveApp) return;
+- timerbusy=1;
+- gametimer();
+- timerbusy=0;
+-}
++// void CALLBACK mmtimer(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1,DWORD dw2)
++// {
++//  if (timerbusy || timerdisabled || !ActiveApp) return;
++//  timerbusy=1;
++//  gametimer();
++//  timerbusy=0;
++// }
+ 
+ 
+ //----------------------------------------------------
+@@ -477,70 +485,70 @@ void cleanup();
+ 
+ int initialize()
+ {
+- //initialize directdraw
+- int err;
+- if ((err=initddraw(hwnd))!=0)
+-    {
+-     cleanup();
+-     winprintf("Failure to initialize DirectDraw %X",err);
+-     return -1;
+-    }
+-
+- //initialize directsound
+- if (!getoption("nosound"))
+-  if ((err=initdsound(hwnd))!=0)
+-     msg.printf(5,"Failure to initialize DirectSound");
+-
+- #ifdef TIMERCALLBACK
+- //initialize timer
+- timerid=(UINT)timeSetEvent(1000/TIMERSPEED,5,mmtimer,0,TIME_PERIODIC);
+- if (!timerid)
+-     {
+-      cleanup();
+-      winprintf("Unable to initialize multimedia timer");
+-      return -1;
+-     }
+- #else
+- lastgettime=lasttime=timeGetTime();
+- #endif
+-
+- //Success!
+- return 0;
++ // //initialize directdraw
++ // int err;
++ // if ((err=initddraw(hwnd))!=0)
++ //    {
++ //     cleanup();
++ //     winprintf("Failure to initialize DirectDraw %X",err);
++ //     return -1;
++ //    }
++ //
++ // //initialize directsound
++ // if (!getoption("nosound"))
++ //  if ((err=initdsound(hwnd))!=0)
++ //     msg.printf(5,"Failure to initialize DirectSound");
++ //
++ // #ifdef TIMERCALLBACK
++ // //initialize timer
++ // timerid=(UINT)timeSetEvent(1000/TIMERSPEED,5,mmtimer,0,TIME_PERIODIC);
++ // if (!timerid)
++ //     {
++ //      cleanup();
++ //      winprintf("Unable to initialize multimedia timer");
++ //      return -1;
++ //     }
++ // #else
++ // lastgettime=lasttime=timeGetTime();
++ // #endif
++ //
++ // //Success!
++ // return 0;
+ }
+ 
+ void cleanup()
+ {
+- terminategame();
+- terminatedsound();
+- terminateddraw();
+- if (timerid) {timeKillEvent(timerid); timerid=0;}
+- ShowCursor(TRUE);
++ // terminategame();
++ // terminatedsound();
++ // terminateddraw();
++ // if (timerid) {timeKillEvent(timerid); timerid=0;}
++ // ShowCursor(TRUE);
+ }
+ 
+ 
+ //fills backbuffer with color
+ void drawrect(char *dest,int color,int x,int y,int xw,int yw)
+ {
+-// dest=dest;
+-
+-  // Unlock the video memory.
+- ddbackbuffer->Unlock( NULL );
+-
+- DDBLTFX bltfx;
+- bltfx.dwSize=sizeof(bltfx);
+- bltfx.dwFillColor=color;
+- RECT r;
+- r.left=(x>=0) ? x : 0; r.top=(y>=0) ? y : 0;
+- xw+=x; yw+=y;
+- r.right=(xw<SCREENX) ? xw : SCREENX;
+- r.bottom=(yw<SCREENY) ? yw : SCREENY;
+- ddbackbuffer->Blt(&r,NULL,NULL,DDBLT_COLORFILL|DDBLT_WAIT,&bltfx);
+-
+- //relock video memory
+- DDSURFACEDESC  ddsd;
+- memset(&ddsd,0,sizeof(ddsd));
+- ddsd.dwSize = sizeof( ddsd );
+- ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
++// // dest=dest;
++//
++//   // Unlock the video memory.
++//  ddbackbuffer->Unlock( NULL );
++//
++//  DDBLTFX bltfx;
++//  bltfx.dwSize=sizeof(bltfx);
++//  bltfx.dwFillColor=color;
++//  RECT r;
++//  r.left=(x>=0) ? x : 0; r.top=(y>=0) ? y : 0;
++//  xw+=x; yw+=y;
++//  r.right=(xw<SCREENX) ? xw : SCREENX;
++//  r.bottom=(yw<SCREENY) ? yw : SCREENY;
++//  ddbackbuffer->Blt(&r,NULL,NULL,DDBLT_COLORFILL|DDBLT_WAIT,&bltfx);
++//
++//  //relock video memory
++//  DDSURFACEDESC  ddsd;
++//  memset(&ddsd,0,sizeof(ddsd));
++//  ddsd.dwSize = sizeof( ddsd );
++//  ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
+ }
+ 
+ 
+@@ -549,230 +557,230 @@ void drawrect(char *dest,int color,int x,int y,int xw,int yw)
+ extern int blah;
+ extern int fps; void fuck();
+ //Windows main func
+-int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
+-                    PSTR szCmdLine, int iCmdShow)
+-  {
+-   if (hPrevInstance) return -1;
+-   hInst=hInstance;
+-
+-    //get configuration
+-   cfg=new config();
+-   cfg->load(configfile);
+-
+-    //process commandline
+-   cline=new commandline(szCmdLine);
+-   cline->execute(0);
+-
+-   //register window class
+-   WNDCLASS  wndclass;
+-   //wndclass.cbSize        = sizeof (wndclass) ;
+-   wndclass.style         = 0;
+-   wndclass.lpfnWndProc   = WndProc ;
+-   wndclass.cbClsExtra    = 0 ;
+-   wndclass.cbWndExtra    = 0 ;
+-   wndclass.hInstance     = hInstance ;
+-   wndclass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
+-   wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
+-   wndclass.hbrBackground = NULL;
+-   wndclass.lpszMenuName  = NULL;
+-   wndclass.lpszClassName = appname;
+-   RegisterClass (&wndclass) ;
+-
+-   //create window for app
+-   hwnd = CreateWindowEx(
+-        WS_EX_TOPMOST,
+-        appname, appname,
+-        WS_POPUP, 0, 0,
+-        GetSystemMetrics(SM_CXSCREEN),
+-        GetSystemMetrics(SM_CYSCREEN),
+-        NULL, NULL, hInstance, NULL );
+-
+-   if (!hwnd) return (FALSE);
+-
+-   UpdateWindow (hwnd) ;
+-   SetFocus(hwnd);
+-   ShowCursor( FALSE );
+-
+-    //initialze system shit
+-   if (initialize()!=0) return FALSE;
+-
+-    //initialize game
+-   if (initgame()!=0)
+-    {
+-     cleanup();
+-     winprintf("Unable to initialize nes");
+-     return -1;
+-    };
+-
+-   cline->execute(1);
+-
+-   //Main loop
+-   MSG  msg;
+-   HRESULT lockerr;
+-   int done=0;
+-   while (!done)
+-    {
+-     m.reset();
+-     if (!ActiveApp) WaitMessage();
+-     while (PeekMessage( &msg, NULL, 0, 0,PM_REMOVE))
+-        {
+-         if (msg.message == WM_QUIT) {done=1; ActiveApp=0; break;}
+-         TranslateMessage(&msg);
+-         DispatchMessage(&msg);
+-        }
+-     #ifdef NETWORK
+-     //update net connections
+-     if (nc) nc->tick();
+-     #endif
+-
+-     //refresh palette
+-     if (nv) nv->refreshpalette();
+-
+-     if( ActiveApp)
+-        {
+-         if (!cfg->get(CFG_NOFILLEDDESKTOP))
+-         {
+-          //clear backbuffer
+-         DDBLTFX bltfx;
+-         bltfx.dwSize=sizeof(bltfx);
+-         bltfx.dwFillColor=9*16+14;
+-         ddbackbuffer->Blt(NULL,NULL,NULL,DDBLT_COLORFILL |DDBLT_WAIT,&bltfx);
+-         }
+-
+-         #ifndef TIMERCALLBACK
+-         {
+-          timeperframe+=timeGetTime()-lastgettime; //ms
+-          lastgettime=timeGetTime();
+-         }
+-         while (timeGetTime()>lasttime+(1000/TIMERSPEED))
+-          {
+-           gametimer();
+-           lasttime+=(1000/TIMERSPEED);
+-          }
+-         #endif
+-
+-         //draw next frame
+-         DDSURFACEDESC  ddsd;
+-         memset(&ddsd,0,sizeof(ddsd));
+-         ddsd.dwSize = sizeof( ddsd );
+-
+-         //Lock it
+-         lockerr=ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
+-         if (lockerr==DD_OK)
+-         {
+-          screen=video=(char *)ddsd.lpSurface; //get pointer to video memory
+-          PITCH=ddsd.lPitch; //set pitch
+-
+-          //draw next frame
+-          updatescreen();
+-          // Unlock the video memory.
+-          ddbackbuffer->Unlock( NULL );
+-
+-          //Flip the surfaces
+-         // if (ddsd.ddsCaps.dwCaps&DDSCAPS_MODEX)
+-            ddprimary->Flip(NULL,0); //DDFLIP_WAIT);
+-         //  else
++// int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,
++//                     PSTR szCmdLine, int iCmdShow)
++//   {
++//    if (hPrevInstance) return -1;
++//    hInst=hInstance;
++//
++//     //get configuration
++//    cfg=new config();
++//    cfg->load(configfile);
++//
++//     //process commandline
++//    cline=new commandline(szCmdLine);
++//    cline->execute(0);
++//
++//    //register window class
++//    WNDCLASS  wndclass;
++//    //wndclass.cbSize        = sizeof (wndclass) ;
++//    wndclass.style         = 0;
++//    wndclass.lpfnWndProc   = WndProc ;
++//    wndclass.cbClsExtra    = 0 ;
++//    wndclass.cbWndExtra    = 0 ;
++//    wndclass.hInstance     = hInstance ;
++//    wndclass.hIcon         = LoadIcon (NULL, IDI_APPLICATION) ;
++//    wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
++//    wndclass.hbrBackground = NULL;
++//    wndclass.lpszMenuName  = NULL;
++//    wndclass.lpszClassName = appname;
++//    RegisterClass (&wndclass) ;
++//
++//    //create window for app
++//    hwnd = CreateWindowEx(
++//         WS_EX_TOPMOST,
++//         appname, appname,
++//         WS_POPUP, 0, 0,
++//         GetSystemMetrics(SM_CXSCREEN),
++//         GetSystemMetrics(SM_CYSCREEN),
++//         NULL, NULL, hInstance, NULL );
++//
++//    if (!hwnd) return (FALSE);
++//
++//    UpdateWindow (hwnd) ;
++//    SetFocus(hwnd);
++//    ShowCursor( FALSE );
++//
++//     //initialze system shit
++//    if (initialize()!=0) return FALSE;
++//
++//     //initialize game
++//    if (initgame()!=0)
++//     {
++//      cleanup();
++//      winprintf("Unable to initialize nes");
++//      return -1;
++//     };
++//
++//    cline->execute(1);
++//
++//    //Main loop
++//    MSG  msg;
++//    HRESULT lockerr;
++//    int done=0;
++//    while (!done)
+ //     {
+-         //   RECT r={0,0,SCREENX,SCREENY};
+-         //   ddprimary->BltFast(0,0,ddbackbuffer,&r,DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
++//      m.reset();
++//      if (!ActiveApp) WaitMessage();
++//      while (PeekMessage( &msg, NULL, 0, 0,PM_REMOVE))
++//         {
++//          if (msg.message == WM_QUIT) {done=1; ActiveApp=0; break;}
++//          TranslateMessage(&msg);
++//          DispatchMessage(&msg);
++//         }
++//      #ifdef NETWORK
++//      //update net connections
++//      if (nc) nc->tick();
++//      #endif
++//
++//      //refresh palette
++//      if (nv) nv->refreshpalette();
++//
++//      if( ActiveApp)
++//         {
++//          if (!cfg->get(CFG_NOFILLEDDESKTOP))
++//          {
++//           //clear backbuffer
++//          DDBLTFX bltfx;
++//          bltfx.dwSize=sizeof(bltfx);
++//          bltfx.dwFillColor=9*16+14;
++//          ddbackbuffer->Blt(NULL,NULL,NULL,DDBLT_COLORFILL |DDBLT_WAIT,&bltfx);
++//          }
++//
++//          #ifndef TIMERCALLBACK
++//          {
++//           timeperframe+=timeGetTime()-lastgettime; //ms
++//           lastgettime=timeGetTime();
++//          }
++//          while (timeGetTime()>lasttime+(1000/TIMERSPEED))
++//           {
++//            gametimer();
++//            lasttime+=(1000/TIMERSPEED);
++//           }
++//          #endif
++//
++//          //draw next frame
++//          DDSURFACEDESC  ddsd;
++//          memset(&ddsd,0,sizeof(ddsd));
++//          ddsd.dwSize = sizeof( ddsd );
++//
++//          //Lock it
++//          lockerr=ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
++//          if (lockerr==DD_OK)
++//          {
++//           screen=video=(char *)ddsd.lpSurface; //get pointer to video memory
++//           PITCH=ddsd.lPitch; //set pitch
++//
++//           //draw next frame
++//           updatescreen();
++//           // Unlock the video memory.
++//           ddbackbuffer->Unlock( NULL );
++//
++//           //Flip the surfaces
++//          // if (ddsd.ddsCaps.dwCaps&DDSCAPS_MODEX)
++//             ddprimary->Flip(NULL,0); //DDFLIP_WAIT);
++//          //  else
++//          //  {
++//          //   RECT r={0,0,SCREENX,SCREENY};
++//          //   ddprimary->BltFast(0,0,ddbackbuffer,&r,DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
++//          //  }
++//          } else
++//          if (lockerr==DDERR_SURFACELOST)
++//           {
++//            ddprimary->Restore();
++//            surfacelost++;
++//           }
++//           else
++//           break; //error locking surface
++//         }
++//
++//     }
++//
++//
++//
++//  //cleanup everything
++//  cleanup();
++//  if (lockerr!=DD_OK) winprintf("DDraw Lock error: %X",lockerr);
++//  return msg.wParam;
+ // }
+-         } else
+-         if (lockerr==DDERR_SURFACELOST)
+-          {
+-           ddprimary->Restore();
+-           surfacelost++;
+-          }
+-          else
+-          break; //error locking surface
+-        }
+-
+-    }
+-
+-
+-
+- //cleanup everything
+- cleanup();
+- if (lockerr!=DD_OK) winprintf("DDraw Lock error: %X",lockerr);
+- return msg.wParam;
+-}
+ 
+ void quitgame()
+ {
+- DestroyWindow( hwnd );
+- ActiveApp=0;
++ // DestroyWindow( hwnd );
++ // ActiveApp=0;
+ }
+ 
+ 
+-LRESULT CALLBACK WndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+-     {
+-     HDC         hdc ;
+-
+-     switch (iMsg)
+-          {
+-      case WM_ACTIVATEAPP:
+-            ActiveApp =wParam;
+-            if (ActiveApp) lastgettime=lasttime=timeGetTime(); //reset timer
+-           break;
+-
+-      case WM_KEYDOWN:
+-//         if (lParam&(1<<30)) break; //it was previously down
+-         wm_keydown((lParam>>16)&0xFF);
+-        break;
+-
+-      case WM_KEYUP:
+-         wm_keyup((lParam>>16)&0xFF);
+-         break;
+-
+-      case WM_MOUSEMOVE:   //update mouse coords
+-          m.updatexy(LOWORD(lParam),HIWORD(lParam));
+-         return 0;
+-
+-      case WM_LBUTTONDOWN:
+-      case WM_LBUTTONUP:
+-      case WM_RBUTTONDOWN:
+-      case WM_RBUTTONUP:
+-        {
+-         int mb=0;  //update mouse buttons
+-         if (wParam&MK_LBUTTON) mb|=1;
+-         if (wParam&MK_RBUTTON) mb|=2;
+-         m.updatebut(mb);
+-        }
+-       return 0;
+-
+-  /*
+-      case WM_TCPSOCKET:
+-        if (!WSAGETSELECTERROR(lParam))
+-             wm_tcpsocket(wParam,WSAGETSELECTEVENT(lParam));
+-        else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
+-       break;
+-*/
+- #ifdef NETWORK
+-      case WM_UDPSOCKET:
+-        if (!WSAGETSELECTERROR(lParam))
+-             wm_udpsocket(wParam,WSAGETSELECTEVENT(lParam));
+-        else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
+-       break;
+- #endif
+- /*    case WM_SERVERSOCKET:
+-        if (!WSAGETSELECTERROR(lParam))
+-             wm_serversocket(wParam,WSAGETSELECTEVENT(lParam));
+-        else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
+-       break;
+-    */
+-      case WM_CREATE :
+-       break;
+-      case WM_DESTROY :
+-//       closeMusic();
+-       PostQuitMessage (0) ;
+-       if (timerid) {timeKillEvent(timerid); timerid=0;}
+-       ::hwnd=0;
+-      break;
+-
+-      }
+-
+-
+-   return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
+-}
++// LRESULT CALLBACK WndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
++//      {
++//      HDC         hdc ;
++//
++//      switch (iMsg)
++//           {
++//       case WM_ACTIVATEAPP:
++//             ActiveApp =wParam;
++//             if (ActiveApp) lastgettime=lasttime=timeGetTime(); //reset timer
++//            break;
++//
++//       case WM_KEYDOWN:
++// //         if (lParam&(1<<30)) break; //it was previously down
++//          wm_keydown((lParam>>16)&0xFF);
++//         break;
++//
++//       case WM_KEYUP:
++//          wm_keyup((lParam>>16)&0xFF);
++//          break;
++//
++//       case WM_MOUSEMOVE:   //update mouse coords
++//           m.updatexy(LOWORD(lParam),HIWORD(lParam));
++//          return 0;
++//
++//       case WM_LBUTTONDOWN:
++//       case WM_LBUTTONUP:
++//       case WM_RBUTTONDOWN:
++//       case WM_RBUTTONUP:
++//         {
++//          int mb=0;  //update mouse buttons
++//          if (wParam&MK_LBUTTON) mb|=1;
++//          if (wParam&MK_RBUTTON) mb|=2;
++//          m.updatebut(mb);
++//         }
++//        return 0;
++//
++//   /*
++//       case WM_TCPSOCKET:
++//         if (!WSAGETSELECTERROR(lParam))
++//              wm_tcpsocket(wParam,WSAGETSELECTEVENT(lParam));
++//         else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
++//        break;
++// */
++//  #ifdef NETWORK
++//       case WM_UDPSOCKET:
++//         if (!WSAGETSELECTERROR(lParam))
++//              wm_udpsocket(wParam,WSAGETSELECTEVENT(lParam));
++//         else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
++//        break;
++//  #endif
++//  /*    case WM_SERVERSOCKET:
++//         if (!WSAGETSELECTERROR(lParam))
++//              wm_serversocket(wParam,WSAGETSELECTEVENT(lParam));
++//         else wm_socketerror(wParam,WSAGETSELECTEVENT(lParam),WSAGETSELECTERROR(lParam));
++//        break;
++//     */
++//       case WM_CREATE :
++//        break;
++//       case WM_DESTROY :
++// //       closeMusic();
++//        PostQuitMessage (0) ;
++//        if (timerid) {timeKillEvent(timerid); timerid=0;}
++//        ::hwnd=0;
++//       break;
++//
++//       }
++//
++//
++//    return DefWindowProc (hwnd, iMsg, wParam, lParam) ;
++// }
+ 
+   /*
+ //loads a resource from the module
+@@ -800,81 +808,82 @@ return t;
+ //directdraw surface wrapper
+ surface::surface(int txw,int tyw)
+ {
+- xw=txw; yw=tyw;
+- //create surface
+- DDSURFACEDESC   ddsd;
+- memset(&ddsd,0,sizeof(ddsd));
+- ddsd.dwSize = sizeof ( ddsd );
+- ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PITCH;
+- ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+- ddsd.dwWidth = xw;
+- ddsd.dwHeight = yw;
+- ddsd.lPitch=xw;
+- HRESULT err= DDO->CreateSurface(&ddsd,&dds, NULL );
+- if (err!=DD_OK) dds=0;
+- else
+- {
+-  DDSCAPS caps;
+-  dds->GetCaps(&caps);
+-//  msg.printf(2,"surface created (%d,%d) %s",ddsd.dwWidth,ddsd.dwHeight,
+-//  (caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "vidmem" : "sysmem");
+- }
++//  xw=txw; yw=tyw;
++//  //create surface
++//  DDSURFACEDESC   ddsd;
++//  memset(&ddsd,0,sizeof(ddsd));
++//  ddsd.dwSize = sizeof ( ddsd );
++//  ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PITCH;
++//  ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
++//  ddsd.dwWidth = xw;
++//  ddsd.dwHeight = yw;
++//  ddsd.lPitch=xw;
++//  HRESULT err= DDO->CreateSurface(&ddsd,&dds, NULL );
++//  if (err!=DD_OK) dds=0;
++//  else
++//  {
++//   DDSCAPS caps;
++//   dds->GetCaps(&caps);
++// //  msg.printf(2,"surface created (%d,%d) %s",ddsd.dwWidth,ddsd.dwHeight,
++// //  (caps.dwCaps&DDSCAPS_VIDEOMEMORY) ? "vidmem" : "sysmem");
++//  }
+ }
+ 
+ surface::~surface()
+ {
+- if (dds) dds->Release();
+-// msg.printf(2,"surface freed");
++//  if (dds) dds->Release();
++// // msg.printf(2,"surface freed");
+ }
+ 
+ char *surface::lock()
+ {
+- if (!dds) return 0;
+- DDSURFACEDESC  ddsd;
+- memset(&ddsd,0,sizeof(ddsd));
+- ddsd.dwSize = sizeof( ddsd );
+- HRESULT lockerr=dds->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
+- if (lockerr==DDERR_SURFACELOST)
+-  {
+-   dds->Restore();
+-   lockerr=dds->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
+-   if (lockerr!=DD_OK) return 0;
+-//   msg.printf(2,"surface restored",ddsd.dwWidth,ddsd.dwHeight);
+-  }
+-
+- oldscrx=SCREENX; oldscry=SCREENY; oldpitch=PITCH;
+- SCREENX=xw; SCREENY=yw; PITCH=ddsd.lPitch;
+-// msg.printf(2,"lock %d,%d %d %p",ddsd.dwWidth,ddsd.dwHeight,PITCH,ddsd.lpSurface);
+-
+- return (char *)ddsd.lpSurface;
++//  if (!dds) return 0;
++//  DDSURFACEDESC  ddsd;
++//  memset(&ddsd,0,sizeof(ddsd));
++//  ddsd.dwSize = sizeof( ddsd );
++//  HRESULT lockerr=dds->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
++//  if (lockerr==DDERR_SURFACELOST)
++//   {
++//    dds->Restore();
++//    lockerr=dds->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
++//    if (lockerr!=DD_OK) return 0;
++// //   msg.printf(2,"surface restored",ddsd.dwWidth,ddsd.dwHeight);
++//   }
++//
++//  oldscrx=SCREENX; oldscry=SCREENY; oldpitch=PITCH;
++//  SCREENX=xw; SCREENY=yw; PITCH=ddsd.lPitch;
++// // msg.printf(2,"lock %d,%d %d %p",ddsd.dwWidth,ddsd.dwHeight,PITCH,ddsd.lpSurface);
++//
++//  return (char *)ddsd.lpSurface;
++return 0;
+ }
+ 
+ 
+ void surface::unlock()
+ {
+- if (!dds) return;
+-
+- dds->Unlock(0);
+- SCREENX=oldscrx; SCREENY=oldscry; PITCH=oldpitch;
+-}
+-
+-int surface::blt(char *dest, int x,int y)
+-{
+- if (!dds) return 0;
+- // Unlock the video memory.
+- ddbackbuffer->Unlock( NULL );
+-
+-// RECT r={0,0,xw,yw};
+- HRESULT err=ddbackbuffer->BltFast(x,y,dds,0,DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
+-// if (err!=0) msg.printf(2,"%X",err);
+-
+- //relock video memory
+- DDSURFACEDESC  ddsd;
+- memset(&ddsd,0,sizeof(ddsd));
+- ddsd.dwSize = sizeof( ddsd );
+- ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
+-
+- return err==DD_OK;
++//  if (!dds) return;
++//
++//  dds->Unlock(0);
++//  SCREENX=oldscrx; SCREENY=oldscry; PITCH=oldpitch;
++// }
++//
++// int surface::blt(char *dest, int x,int y)
++// {
++//  if (!dds) return 0;
++//  // Unlock the video memory.
++//  ddbackbuffer->Unlock( NULL );
++//
++// // RECT r={0,0,xw,yw};
++//  HRESULT err=ddbackbuffer->BltFast(x,y,dds,0,DDBLTFAST_NOCOLORKEY|DDBLTFAST_WAIT);
++// // if (err!=0) msg.printf(2,"%X",err);
++//
++//  //relock video memory
++//  DDSURFACEDESC  ddsd;
++//  memset(&ddsd,0,sizeof(ddsd));
++//  ddsd.dwSize = sizeof( ddsd );
++//  ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
++//
++//  return err==DD_OK;
+ }
+ 
+ 
+@@ -884,15 +893,16 @@ int surface::blt(char *dest, int x,int y)
+ 
+ char *getclipboardtext()
+ {
+- if (!IsClipboardFormatAvailable(CF_TEXT)) return 0;
+- OpenClipboard(hwnd);
+- HGLOBAL h=GetClipboardData(CF_TEXT);
+- if (!h) return 0;
+- char *s=(char *)malloc(GlobalSize(h));
+- strcpy(s,(char *)GlobalLock(h));
+- GlobalUnlock(h);
+- CloseClipboard();
+- return s;
++ // if (!IsClipboardFormatAvailable(CF_TEXT)) return 0;
++ // OpenClipboard(hwnd);
++ // HGLOBAL h=GetClipboardData(CF_TEXT);
++ // if (!h) return 0;
++ // char *s=(char *)malloc(GlobalSize(h));
++ // strcpy(s,(char *)GlobalLock(h));
++ // GlobalUnlock(h);
++ // CloseClipboard();
++ // return s;
++ return 0;
+ }
+ 
+ 
+@@ -956,7 +966,3 @@ int random(int x)
+  return rand()*x/32768;
+ }
+ #endif
+-
+-
+-
+-
+diff --git a/src-original/win95/keyb.cpp b/src/win95/keyb.cpp
+index 568aa20..760e08f 100644
+--- a/src-original/win95/keyb.cpp
++++ b/src/win95/keyb.cpp
+@@ -1,5 +1,5 @@
+ #include <stdlib.h>
+-#include <dos.h>
++// #include <dos.h>
+ #include <ctype.h>
+ 
+ 
+@@ -213,15 +213,9 @@ keyname keynames[]=
+ 
+ char *getkeyname(char key)
+ {
+-for (int i=0; keynames[i].scancode; i++)
++int i;
++for (i=0; keynames[i].scancode; i++)
+  if (keynames[i].scancode==key) break;
+ 
+ return(keynames[i].name);
+ }
+-
+-
+-
+-
+-
+-
+-
