@@ -87,9 +87,9 @@ class GUIstaticimage:public GUIrect
 class GUIbutton:public GUIrect
 {
  protected:
- uutimer btimer;
+ uutimer btimer; // 45
  public:
- char depressed;
+ char depressed; // 53
 
  GUIbutton(GUIrect *p,int x,int y,int xw,int yw);
 
@@ -268,9 +268,9 @@ class GUIfloatedit:public GUInumberedit
 class GUIbox:public GUIrect
 {
  protected:
- char title[80];
- GUIbutton *close; //close button
- GUIcontents *contents; //contents of this window
+ char title[80]; // 45
+ GUIbutton *close; // 125 close button
+ GUIcontents *contents; // 129 contents of this window
 
  public:
  GUIbox(GUIrect *p,char *titlestr,GUIcontents *c,int x,int y);
@@ -313,9 +313,9 @@ class GUIbox:public GUIrect
 
 class GUImaximizebox:public GUIbox
 {
- GUIbutton *max; //maximize button
+ GUIbutton *max; // 133 maximize button
  public:
- int maximized; //are we maximized?
+ int maximized; // 137 are we maximized?
  GUImaximizebox(GUIrect *p,char *titlestr,GUIcontents *c,int x,int y);
 
  virtual void draw(char *dest);
@@ -534,7 +534,7 @@ public:
  virtual void draw(char *dest);
  virtual void drawitems(char *dest,int x,int y) {};
 
- virtual int keyhit(char kbscan,char key); 
+ virtual int keyhit(char kbscan,char key);
 
  virtual char *getname() {return "guilistbox";}
 };
@@ -556,11 +556,3 @@ class GUIstringlistbox:public GUIlistbox
 #include "dlgpos.h"
 
 #endif
-
-
-
-
-
-
-
-

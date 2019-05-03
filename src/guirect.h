@@ -20,13 +20,13 @@ void resetGUIdef();
 class GUIrect
 {
  public:
- GUIrect *parent; //this window's parent
- GUIrect *child,*lastchild; //linked list of children, topmost first
- GUIrect *prev,*next; //linked list of them
- char focus; //do we (or our children) have input focus?
- GUIrect *lastfocus; //last child of ours that had focus
+ GUIrect *parent /*4*/; //this window's parent
+ GUIrect *child/*8*/,*lastchild/*12*/; //linked list of children, topmost first
+ GUIrect *prev/*16*/,*next/*20*/; //linked list of them
+ char focus /*24*/; //do we (or our children) have input focus?
+ GUIrect *lastfocus /*25*/ ; //last child of ours that had focus
 
- int x1,y1,x2,y2;
+ int x1/*29*/,y1/*33*/,x2/*37*/,y2/*41*/;
 
  friend void scanguitree(GUIrect *r,struct lpoint &p,GUIrect *parent);
  GUIrect(GUIrect *p,int,int,int,int);
