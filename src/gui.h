@@ -336,8 +336,8 @@ class GUImaximizebox:public GUIbox
 
 class GUIonebuttonbox:public GUIbox
 {
- GUIbar *bar;
- GUIbutton *b1;
+ GUIbar *bar; // 133
+ GUIbutton *b1; // 137
  public:
  GUIonebuttonbox(GUIrect *p,char *str,GUIcontents *c,char *b1name,int x,int y);
 
@@ -349,8 +349,8 @@ class GUIonebuttonbox:public GUIbox
 
 class GUItwobuttonbox:public GUIbox
 {
- GUIbar *bar;
- GUIbutton *b1,*b2;
+ GUIbar *bar; // 133
+ GUIbutton *b1 /*137*/,*b2/*141*/;
  public:
  GUItwobuttonbox(GUIrect *p,char *str,GUIcontents *contents,char *b1name,char *b2name,int x,int y);
 
@@ -367,8 +367,8 @@ class GUItwobuttonbox:public GUIbox
 class GUItrackbutton:public GUIbutton
 {
  protected:
- class GUItrack *ptrack; //track parent that we're on
- int tpos; //thumb sliding mouse relative variable
+ class GUItrack *ptrack; // 54 track parent that we're on
+ int tpos; //58 thumb sliding mouse relative variable
  public:
  GUItrackbutton(class GUItrack *p,int size);
 
@@ -397,11 +397,11 @@ public:
 class GUItrack:public GUIrect
 {
  protected:
- GUItrackbutton *thumb;
- int tracklen; //length of track
- int trackpos; //position of track thumb
+ GUItrackbutton *thumb; // 45
+ int tracklen; // 49 length of track
+ int trackpos; //53 position of track thumb
 
- class GUIscrollbar *pscroll;
+ class GUIscrollbar *pscroll; // 57
 
  public:
  GUItrack(GUIscrollbar *p,int x,int y,int xw,int yw);
@@ -442,14 +442,14 @@ class GUIhtrack:public GUItrack
 class GUIscrollbar:public GUIrect
 {
  protected:
- int pos;      //positin with scroll range
- int min,max; //min/max range
+ int pos;      //45 positin with scroll range
+ int min,max; //49, 53, min/max range
  void clip(); //clip position to min/max
 
  //track
  public:
- GUIimagebutton *up,*down;
- GUItrack *track;
+ GUIimagebutton *up,*down; // 57, 61
+ GUItrack *track; // 65
 
  GUIscrollbar(GUIrect *p,int x,int y,int xw,int yw);
 
@@ -497,19 +497,19 @@ typedef void *ITEMPTR;
 
 class GUIlistbox:public GUIrect
 {
- uutimer timer;
- uutimer dblclick;
- int depressed;
+ uutimer timer; // 45
+ uutimer dblclick; // 53
+ int depressed; // 61
 
 protected:
- int numitems; //number of items in listbox
- ITEMPTR *items; //pointer to array of itemptrs
+ int numitems; //65 number of items in listbox
+ ITEMPTR *items; //69 pointer to array of itemptrs
 
- int sel; //currently selected item
- int itemheight; //height of each item
- int itemv; //number of displayable items vertically
+ int sel; //73 currently selected item
+ int itemheight; //77 height of each item
+ int itemv; //81 number of displayable items vertically
 
- GUIvscrollbar *scroll;
+ GUIvscrollbar *scroll; //85
 
 public:
  void freeitems();
