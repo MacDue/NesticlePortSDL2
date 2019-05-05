@@ -171,10 +171,10 @@ class GUIedit:public GUIrect
 class GUItextedit:public GUIedit
 {
  protected:
- int maxinputlen;
- int inputlen;    //length of input in chars
- int inputw;       //current width of input
- char input[128];  //input
+ int maxinputlen; // 137
+ int inputlen;    // 141 length of input in chars
+ int inputw;       //145 current width of input
+ char input[128];  //149 input
 
  void backspace();
  void addchar(char c);
