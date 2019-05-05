@@ -151,12 +151,12 @@ class GUIcheckbox:public GUIrect
 class GUIedit:public GUIrect
 {
  protected:
- char prompt[80]; //prompt for input
- int promptw;     //width of prompt in pixels
- int inputmaxw;   //maximum width of input
+ char prompt[80]; //45 prompt for input
+ int promptw;     //125 width of prompt in pixels
+ int inputmaxw;   //129 maximum width of input
 
  public:
- int disabled;
+ int disabled;    //133
  GUIedit(GUIrect *p,char *pmpt,int x,int y,int xw);
  virtual int acceptfocus() {return 1;} //do we need to be topmost ever?
 

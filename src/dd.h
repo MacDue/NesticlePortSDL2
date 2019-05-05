@@ -103,6 +103,3 @@ class CLIP
 #ifdef __WATCOMC__
 int random(int x);
 #endif
-
-
-
