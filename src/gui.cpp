@@ -95,8 +95,7 @@ GUIrect* GUIbutton::click(class mouse &m) {
     this->btimer.set(28);
     // 60 sendmessage
     if (this->parent) {
-      /*TODO Find out what 2 means: guess click*/
-      this->parent->sendmessage(this, 2);
+      this->parent->sendmessage(this, GUIMSG_HELDDOWN);
     }
     click_result = this;
   } else {
@@ -112,8 +111,7 @@ int GUIbutton::release(class mouse &m) {
     this->depressed = false;
     if (this->parent) {
       if (this->hittest(m.x, m.y)) {
-        /* TODO find out what 1 means: guess release*/
-        this->parent->sendmessage(this, 1);
+        this->parent->sendmessage(this, GUIMSG_PUSHED);
       }
     }
     result = true;
@@ -142,7 +140,7 @@ void GUIbutton::draw(char* dest) {
       if (this->btimer.check()) {
         GUIrect* hit = this->hittest(m.x, m.y);
         if (hit) {
-          this->parent->sendmessage(this, 2);
+          this->parent->sendmessage(this, GUIMSG_HELDDOWN);
           this->btimer.set(7);
         }
       }
@@ -233,9 +231,9 @@ int GUIcheckbox::release(class mouse &m) {
       this->checked ^= 1;
       if (this->parent) {
         if (this->checked) {
-          this->parent->sendmessage(this, 3 /*TODO find meaning: probably checked*/);
+          this->parent->sendmessage(this, GUIMSG_CHECKED);
         } else {
-          this->parent->sendmessage(this, 4 /*probably unchecked */);
+          this->parent->sendmessage(this, GUIMSG_UNCHECKED);
         }
       }
     }
@@ -475,7 +473,7 @@ int GUIonebuttonbox::sendmessage(GUIrect* c, int msg) {
   if (c != this->b1 || msg != 1) {
     result = GUIbox::sendmessage(c, msg);
   } else {
-    if (this->contents->sendmessage(this, 20)) {
+    if (this->contents->sendmessage(this, GUIMSG_B1)) {
       delete this;
     }
     result = 1;
@@ -487,7 +485,7 @@ int GUIonebuttonbox::keyhit(char kbscan, char key) {
   int result;
   /* maybe key == 28? */
   if (kbscan == 28) {
-    if (this->contents->sendmessage(this, 20)) {
+    if (this->contents->sendmessage(this, GUIMSG_B1)) {
       delete this;
     }
     result = 1;
@@ -533,13 +531,13 @@ int GUItwobuttonbox::sendmessage(GUIrect* c, int msg) {
     if (c != this->b2 || msg != 1) {
       result = GUIbox::sendmessage(c, msg);
     } else {
-      if (this->contents->sendmessage(this, 21)) {
+      if (this->contents->sendmessage(this, GUIMSG_B2)) {
         delete this;
       }
       result = 1;
     }
   } else {
-    if (this->contents->sendmessage(this, 20)) {
+    if (this->contents->sendmessage(this, GUIMSG_OK)) {
       delete this;
     }
     result = 1;
@@ -550,7 +548,7 @@ int GUItwobuttonbox::sendmessage(GUIrect* c, int msg) {
 int GUItwobuttonbox::keyhit(char kbscan, char key) {
   int result;
   if (kbscan == 28) {
-    if (this->contents->sendmessage(this, 20)) {
+    if (this->contents->sendmessage(this, GUIMSG_OK)) {
       delete this;
     }
     result = 1;
@@ -786,10 +784,10 @@ int GUIvscrollbar::keyhit(char kbscan, char key) {
   int result;
   /* probably kbscan ? */
   if (kbscan == 72) {
-    this->sendmessage(this->up, 2);
+    this->sendmessage(this->up, GUIMSG_HELDDOWN);
     result = 1;
   } else if (kbscan == 80) {
-    this->sendmessage(this->down, 2);
+    this->sendmessage(this->down, GUIMSG_HELDDOWN);
     result = 1;
   } else {
     result = 0;
@@ -814,10 +812,10 @@ GUIhscrollbar::GUIhscrollbar(GUIrect* parent, int x, int y, int width)
 int GUIhscrollbar::keyhit(char kbscan, char key) {
   int result;
   if (kbscan == 75) {
-    this->sendmessage(this->up, 2);
+    this->sendmessage(this->up, GUIMSG_HELDDOWN);
     result = 1;
   } else if (kbscan == 77) {
-    this->sendmessage(this->down, 2);
+    this->sendmessage(this->down, GUIMSG_HELDDOWN);
     result = 1;
   } else {
     result = 0;
@@ -886,7 +884,7 @@ void GUIlistbox::setsel(int s) {
       this->scroll->setpos(this->sel - this->itemv + 1);
     }
     if (this->parent) {
-      this->parent->sendmessage(this, 5);
+      this->parent->sendmessage(this, GUIMSG_LISTBOXSELCHANGED);
     }
   }
 }
@@ -896,7 +894,7 @@ GUIrect* GUIlistbox::click(class mouse &m) {
   if (m.click) {
     if (!this->dblclick.check()) {
       if (this->parent) {
-        this->parent->sendmessage(this, 6);
+        this->parent->sendmessage(this, GUIMSG_LISTBOXDBLCLICKED);
       }
     }
     this->dblclick.set(30);
