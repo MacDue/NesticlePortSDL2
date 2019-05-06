@@ -204,7 +204,7 @@ class GUInumbertextedit:public GUItextedit
 class GUInumberedit:public GUIedit
 {
  protected:
- GUIimagebutton *up,*down;
+ GUIimagebutton *up/*137*/,*down/*141*/;
  virtual void clip()=0;
  virtual void setmax()=0;
  virtual void clear()=0;
@@ -217,8 +217,8 @@ class GUInumberedit:public GUIedit
 
 class GUIintedit:public GUInumberedit
 {
- int min,max; //min max of integer
- int n;
+ int min,max; // 145, 149 min max of integer
+ int n; // 153
  public:
  GUIintedit(GUIrect *p,char *pmpt,int x,int y,int xw,int num,int min,int max);
 
@@ -241,8 +241,8 @@ class GUIintedit:public GUInumberedit
 
 class GUIfloatedit:public GUInumberedit
 {
- float min,max; //min max of integer
- float n;
+ float min,max; //145, 149 min max of integer
+ float n; //153
  public:
  GUIfloatedit(GUIrect *p,char *pmpt,int x,int y,int xw,float num,float min,float max);
 
