@@ -9,10 +9,10 @@ typedef void (*MENUFUNCPTR)();
 class menuitem
 {
 public:
- char *text;     //text for this menu item
- MENUFUNCPTR func; //function to call
- char key;       //shortcut key
- class menu *submenu;  //submenu
+ char *text;     // 0 text for this menu item
+ MENUFUNCPTR func; // 4 function to call
+ char key;       // 8 shortcut key
+ class menu *submenu;  //9 submenu
 
  void draw(int x,int y,int xw,int sel); //draw menuitem
  int width(); //finds width of this item
@@ -40,8 +40,8 @@ int keyhit(char kbscan,char key);
 class GUImenu:public GUIrect
 {
 protected:
- class menu *tmenu; //menu represented by this GUI
- class menuitem *selmi; //currently selected menuitem, if any
+ class menu *tmenu; //45 menu represented by this GUI
+ class menuitem *selmi; //49 currently selected menuitem, if any
 public:
  GUImenu(GUIrect *p,class menu *m,int x,int y);
 
