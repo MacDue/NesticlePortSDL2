@@ -18,7 +18,7 @@ An experiment compiling the NESticle code released by [IamRifki](https://github.
 - ~~Code seems incomplete with a lot of linker errors (missing functions) around the GUI (I think in the full source code there would be implementations of the GUI for both WIN95/DOS).~~
 
 - Code is incomplete. The last few commits have put quite a bit of work into reverse engineering `GUI.LIB` into usable C++ code.
-  - So fair `gui.cpp`, `guirect.cpp`, `guiedit.cpp`, have been revered with `guimenu.cpp` a work in progress.
+  - So fair `gui.cpp`, `guirect.cpp`, `guiedit.cpp`, `guimenu.cpp` have been reversed (though not tested).
 
 Linker output:
 ```
@@ -52,8 +52,6 @@ obj/nes.o: In function `resetNEShardware()':
 /home/macdue/git/NESticlePort/src/nes.cpp:87: undefined reference to `m6502reset'
 /home/macdue/git/NESticlePort/src/nes.cpp:89: undefined reference to `m6502MemoryRead'
 /home/macdue/git/NESticlePort/src/nes.cpp:90: undefined reference to `m6502MemoryWrite'
-obj/stddlg.o: In function `initdefaultgui()':
-/home/macdue/git/NESticlePort/src/stddlg.cpp:354: undefined reference to `GUIhmenu::GUIhmenu(GUIrect*, menu*, int, int)'
 obj/stddlg.o:(.data.rel.ro._ZTV8aboutdlg[_ZTV8aboutdlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
 obj/stddlg.o:(.data.rel.ro._ZTV14systemmessages[_ZTV14systemmessages]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
 obj/stddlg.o:(.data.rel.ro._ZTV10GUImessage[_ZTV10GUImessage]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
@@ -98,8 +96,18 @@ obj/main.o: In function `updatescreen()':
 /home/macdue/git/NESticlePort/src/main.cpp:220: undefined reference to `m'
 /home/macdue/git/NESticlePort/src/main.cpp:221: undefined reference to `screen'
 obj/guimenu.o: In function `menuitem::draw(int, int, int, int)':
-/home/macdue/git/NESticlePort/src/guimenu.cpp:12: undefined reference to `screen'
-/home/macdue/git/NESticlePort/src/guimenu.cpp:14: undefined reference to `screen'
+/home/macdue/git/NESticlePort/src/guimenu.cpp:17: undefined reference to `screen'
+/home/macdue/git/NESticlePort/src/guimenu.cpp:19: undefined reference to `screen'
+obj/guimenu.o: In function `GUIvmenu::draw(char*)':
+/home/macdue/git/NESticlePort/src/guimenu.cpp:248: undefined reference to `screen'
+/home/macdue/git/NESticlePort/src/guimenu.cpp:250: undefined reference to `screen'
+obj/guimenu.o:/home/macdue/git/NESticlePort/src/guimenu.cpp:253: more undefined references to `screen' follow
+obj/guimenu.o: In function `GUIpopupmenu::GUIpopupmenu(GUIrect*, menu*, int, int)':
+/home/macdue/git/NESticlePort/src/guimenu.cpp:328: undefined reference to `vtable for GUIpopupmenu'
+obj/guimenu.o:(.data.rel.ro._ZTV8GUIhmenu[_ZTV8GUIhmenu]+0x58): undefined reference to `GUImenu::losechildfocus()'
+obj/guimenu.o:(.data.rel.ro._ZTV8GUIhmenu[_ZTV8GUIhmenu]+0x80): undefined reference to `GUIhmenu::keyhit(char, char)'
+obj/guimenu.o:(.data.rel.ro._ZTV8GUIvmenu[_ZTV8GUIvmenu]+0x58): undefined reference to `GUImenu::losechildfocus()'
+obj/guimenu.o:(.data.rel.ro._ZTV7GUImenu[_ZTV7GUImenu]+0x58): undefined reference to `GUImenu::losechildfocus()'
 obj/guirect.o: In function `GUIrect::setmodal(GUIrect*)':
 /home/macdue/git/NESticlePort/src/guirect.cpp:20: undefined reference to `m'
 obj/guirect.o: In function `GUIrect::fill(char)':

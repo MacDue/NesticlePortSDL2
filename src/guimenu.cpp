@@ -5,6 +5,8 @@
 #include "guirect.h"
 #include "guimenu.h"
 #include "mouse.h"
+#include "keyb.h"
+#include "guiroot.h"
 
 extern FONT *font[10];
 
@@ -168,6 +170,7 @@ int GUImenu::drag(class mouse &m) {
       this->selmi = item;
       GUIrect* child;
       while(true) {
+        /* Might be an infinite loop */
         child = this->child;
         if (!child) {
           break;
@@ -191,6 +194,169 @@ int GUImenu::drag(class mouse &m) {
 }
 
 // next
-// void GUImenu::losefocus() {
-//
-// }
+void GUImenu::losefocus() {
+  GUIrect* child;
+  while (true) {
+    /* Might be an infinite loop */
+    child = this->child;
+    if (!child) {
+      break;
+    }
+    if (child) {
+      delete child;
+    }
+  }
+  this->selmi = NULL;
+}
+
+
+int GUImenu::domenuitem(menuitem *i) {
+  if (i) {
+    i->menufunc();
+  }
+  return 1;
+}
+
+/* GUIvmenu */
+
+GUIvmenu::GUIvmenu(GUImenu* parent, class menu *m, int x, int y)
+  : GUImenu(parent, m, x, y)
+{
+  this->x2 = this->x1 + this->getmenuwidth();
+  this->y2 = this->y1 + this->getmenuheight();
+}
+
+void GUIvmenu::draw(char* dest) {
+  drawrect(
+    dest,
+    /* color ?*/ 154,
+    this->x1,
+    this->y1,
+    this->width(),
+    this->height());
+  int item_y = this->y1;
+  // Best guess V
+  for (menuitem* item = this->tmenu->m; item->text; item++) {
+    if (item == this->selmi) {
+      drawrect(dest, 2, this->x1, item_y, this->width(), item->height());
+      item->draw(this->x1, item_y, this->width(), 2);
+    } else {
+      item->draw(this->x1, item_y, this->width(), 3);
+    }
+    if (item->key & 0x80) {
+      char* keyname = getkeyname(item->key & 0x7F);
+      font[2]->draw(keyname, screen, this->x2 - 12, item_y);
+    } else {
+      font[2]->draw(item->key, screen, this->x2 - 8, item_y);
+    }
+    if (item->submenu) {
+      font[3]->draw('>', screen, this->x2 - 8, item_y);
+    }
+    item_y += item->height();
+  }
+  GUIrect::draw(dest);
+}
+
+class menuitem* GUIvmenu::menuhittest(int x, int y, int &sx, int &sy) {
+  int current_height = 0;
+  class menuitem* item;
+  for (item = this->tmenu->m ; ; item++) {
+    if (!item) {
+      return NULL;
+    }
+    current_height += item->height();
+    if (current_height > y) {
+      break;
+    }
+  }
+  // Unsure if correct:
+  if (item->text[0] == '-') {
+    return NULL;
+  } else {
+    sx = this->width();
+    sy = current_height - item->height();
+    return item;
+  }
+}
+
+/* GUIhmenu */
+
+GUIhmenu::GUIhmenu(GUIrect* parent, class menu *m, int x, int y)
+  : GUImenu(parent, m, x, y)
+{
+  this->x2 = this->x1 + this->getmenuwidth();
+  this->y2 = this->y1 + this->getmenuheight();
+  GUIrect::setfocus(this);
+}
+
+void GUIhmenu::draw(char* dest) {
+  int item_x = this->x1;
+  drawrect(dest,
+    154,
+    this->x1,
+    this->y1,
+    this->x1 - item_x,
+    this->height());
+  for (class menuitem* item = this->tmenu->m; item->text; item++) {
+    if (item == this->selmi) {
+      drawrect(dest, 2, item_x, this->y1, item->width(), item->height());
+      item->draw(item_x, this->y1, 20, 2);
+    } else {
+      item->draw(item_x, this->y1, 20, 3);
+    }
+    item_x += item->width();
+  }
+  GUIrect::draw(dest);
+}
+
+class menuitem* GUIhmenu::menuhittest(int x, int y, int &sx, int &sy) {
+  int current_width = 0;
+  for (class menuitem* item = this->tmenu->m; item->text; item++) {
+    current_width += item->width();
+    if (current_width > x) {
+      sx = current_width - item->width();
+      sy = this->y2;
+      return item;
+    }
+  }
+  return NULL;
+}
+
+/* GUIpopupmenu */
+
+GUIpopupmenu::GUIpopupmenu(GUIrect* treport, class menu* m, int x, int y)
+  : GUIvmenu(reinterpret_cast<GUImenu*>(guiroot), m, x, y), report(treport)
+{
+  if (this->x1 < 0) {
+    this->moverel(-this->x1, 0);
+  }
+  if (this->y1 < 0) {
+    this->moverel(0, -this->y1);
+  }
+  if (SCREENX < this->x2) {
+    this->moverel(SCREENX - this->x2, 0);
+  }
+  if (SCREENY < this->y2) {
+    this->moverel(0, SCREENY - this->y2);
+  }
+  GUIrect::setmodal(this);
+}
+
+
+int GUIpopupmenu::domenuitem(menuitem* t) {
+  this->report->sendmessage(this, (t - this->tmenu->m)/sizeof(menuitem));
+  return 1;
+}
+
+int GUIpopupmenu::release(mouse &m) {
+  GUImenu::release(m);
+  if (this) {
+    delete this;
+  }
+  return 1;
+}
+
+void GUIpopupmenu::draw(char* dest) {
+  GUIvmenu::draw(dest);
+  GUIrect::outline(0);
+}

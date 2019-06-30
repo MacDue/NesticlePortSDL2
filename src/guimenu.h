@@ -103,7 +103,7 @@ class GUIhmenu:public GUImenu
 
 class GUIpopupmenu:public GUIvmenu
 {
- GUIrect *report;
+ GUIrect *report; // 53
  public:
  GUIpopupmenu(GUIrect *treport,class menu *m, int x,int y);
  ~GUIpopupmenu();
