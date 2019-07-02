@@ -12,6 +12,7 @@
 #include "r2img.h"
 #include "dd.h"
 #include "keyb.h"
+#include "gui.h"
 
 
 GUIrect *GUIrect::modal = NULL;
@@ -340,6 +341,36 @@ int GUIroot::keyhit(char kbscan, char key) {
     result = 1;
   } else {
     result = GUIrect::keyhit(kbscan, key);
+  }
+  return result;
+}
+
+
+/* -------------- GUIcontents -------------- */
+
+void GUIcontents::resize(int xw, int yw) {
+  if (this->parent) {
+    /* Code does not make much type sense, but
+      GUIcontents probably maybe is always in a GUIbox.
+     */
+    reinterpret_cast<GUIbox*>(this->parent)->GUIbox::resize(
+      xw + this->parent->width() - this->width(),
+      yw + this->parent->height() - this->height());
+  }
+  GUIrect::resize(xw, yw);
+}
+
+int GUIcontents::keyhit(char kbscan, char key) {
+  int result;
+  if (kbscan == 1) {
+    if (this->parent) {
+      delete this->parent;
+    }
+    result = 1;
+  } else if (kbscan == 15) {
+    this->cyclefocus(kbstat & 1);
+  } else {
+    this->keyhit(kbscan, key);
   }
   return result;
 }

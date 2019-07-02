@@ -26,8 +26,6 @@ obj/cpu.o:(.bss+0x1): multiple definition of `CPURunning'
 obj/6502/6502.o:(.bss+0x8): first defined here
 /usr/lib/gcc/x86_64-linux-gnu/6/../../../x86_64-linux-gnu/Scrt1.o: In function `_start':
 (.text+0x20): undefined reference to `main'
-obj/nesdlg.o: In function `GUIcontents::GUIcontents(int, int)':
-/home/macdue/git/NESticlePort/src/guirect.h:79: undefined reference to `vtable for GUIcontents'
 obj/nesdlg.o: In function `DLGPOS::getnewpos(GUIbox*)':
 /home/macdue/git/NESticlePort/src/dlgpos.h:21: undefined reference to `GUIdefx'
 /home/macdue/git/NESticlePort/src/dlgpos.h:21: undefined reference to `GUIdefy'
@@ -37,26 +35,11 @@ obj/nesdlg.o: In function `DLGPOS::getnewpos(GUIbox*)':
 /home/macdue/git/NESticlePort/src/dlgpos.h:29: undefined reference to `GUIdefy'
 obj/nesdlg.o: In function `bitmap8x8::draw_tile(char*, int, int)':
 /home/macdue/git/NESticlePort/src/nesvideo.h:22: undefined reference to `draw_tile_asm'
-obj/nesdlg.o: In function `GUIcontents::~GUIcontents()':
-/home/macdue/git/NESticlePort/src/guirect.h:76: undefined reference to `vtable for GUIcontents'
-obj/nesdlg.o:(.data.rel.ro._ZTV14paletteviewdlg[_ZTV14paletteviewdlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/nesdlg.o:(.data.rel.ro._ZTV7namedlg[_ZTV7namedlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/nesdlg.o:(.data.rel.ro._ZTV10patterndlg[_ZTV10patterndlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/nesdlg.o:(.data.rel.ro._ZTV7loaddlg[_ZTV7loaddlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/nesdlg.o:(.data.rel.ro._ZTI14paletteviewdlg[_ZTI14paletteviewdlg]+0x10): undefined reference to `typeinfo for GUIcontents'
-obj/nesdlg.o:(.data.rel.ro._ZTI7namedlg[_ZTI7namedlg]+0x10): undefined reference to `typeinfo for GUIcontents'
-obj/nesdlg.o:(.data.rel.ro._ZTI10patterndlg[_ZTI10patterndlg]+0x10): undefined reference to `typeinfo for GUIcontents'
-obj/nesdlg.o:(.data.rel.ro._ZTI7loaddlg[_ZTI7loaddlg]+0x10): undefined reference to `typeinfo for GUIcontents'
 obj/nes.o: In function `resetNEShardware()':
 /home/macdue/git/NESticlePort/src/nes.cpp:86: undefined reference to `m6502Base'
 /home/macdue/git/NESticlePort/src/nes.cpp:87: undefined reference to `m6502reset'
 /home/macdue/git/NESticlePort/src/nes.cpp:89: undefined reference to `m6502MemoryRead'
 /home/macdue/git/NESticlePort/src/nes.cpp:90: undefined reference to `m6502MemoryWrite'
-obj/stddlg.o:(.data.rel.ro._ZTV8aboutdlg[_ZTV8aboutdlg]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/stddlg.o:(.data.rel.ro._ZTV14systemmessages[_ZTV14systemmessages]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/stddlg.o:(.data.rel.ro._ZTV10GUImessage[_ZTV10GUImessage]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/stddlg.o:(.data.rel.ro._ZTI8aboutdlg[_ZTI8aboutdlg]+0x10): undefined reference to `typeinfo for GUIcontents'
-obj/stddlg.o:(.data.rel.ro._ZTI10GUImessage[_ZTI10GUImessage]+0x10): undefined reference to `typeinfo for GUIcontents'
 obj/font.o: In function `FONT::printf(int, int, char*, ...)':
 /home/macdue/git/NESticlePort/src/font.cpp:78: undefined reference to `screen'
 obj/font.o: In function `IMG::draw(char*, int, int, int)':
@@ -109,15 +92,12 @@ obj/guimenu.o:(.data.rel.ro._ZTV8GUIhmenu[_ZTV8GUIhmenu]+0x80): undefined refere
 obj/guimenu.o:(.data.rel.ro._ZTV8GUIvmenu[_ZTV8GUIvmenu]+0x58): undefined reference to `GUImenu::losechildfocus()'
 obj/guimenu.o:(.data.rel.ro._ZTV7GUImenu[_ZTV7GUImenu]+0x58): undefined reference to `GUImenu::losechildfocus()'
 obj/guirect.o: In function `GUIrect::setmodal(GUIrect*)':
-/home/macdue/git/NESticlePort/src/guirect.cpp:20: undefined reference to `m'
+/home/macdue/git/NESticlePort/src/guirect.cpp:21: undefined reference to `m'
 obj/guirect.o: In function `GUIrect::fill(char)':
-/home/macdue/git/NESticlePort/src/guirect.cpp:293: undefined reference to `screen'
+/home/macdue/git/NESticlePort/src/guirect.cpp:294: undefined reference to `screen'
 obj/guirect.o: In function `GUIrect::outline(char)':
-/home/macdue/git/NESticlePort/src/guirect.cpp:299: undefined reference to `screen'
-obj/inputw.o:(.data.rel.ro._ZTV17changeinputdevice[_ZTV17changeinputdevice]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/inputw.o:(.data.rel.ro._ZTV12redefinekeys[_ZTV12redefinekeys]+0x80): undefined reference to `GUIcontents::keyhit(char, char)'
-obj/inputw.o:(.data.rel.ro._ZTI17changeinputdevice[_ZTI17changeinputdevice]+0x10): undefined reference to `typeinfo for GUIcontents'
-obj/inputw.o:(.data.rel.ro._ZTI12redefinekeys[_ZTI12redefinekeys]+0x10): undefined reference to `typeinfo for GUIcontents'
+/home/macdue/git/NESticlePort/src/guirect.cpp:300: undefined reference to `screen'
 obj/message.o: In function `MESSAGE::draw(int, int)':
 /home/macdue/git/NESticlePort/src/message.cpp:15: undefined reference to `screen'
+obj/6502/6502.o: In function `Reset6502()':
 ```
