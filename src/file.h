@@ -1,13 +1,17 @@
 #ifndef _FILEIO_
 #define _FILEIO_
+
+#include <fstream>
+
 //file input/output wrapper functions
 class FILEIO
 {
- int h;           //dos handle of this file
+  std::ios_base::openmode m_current_openmode;
+  std::fstream h;
  public:
-  FILEIO() {h=0; }
+  FILEIO() {}
   int open(char *filename);
-  FILEIO(char *file) {h=0; open(file);}
+  FILEIO(char *file) {open(file);}
   ~FILEIO() {close();}
   int create(char *filename);
   void close();
@@ -43,4 +47,3 @@ void enumdir(char *path,DIRFUNCPTR func,void *context);
 
 
 #endif
-

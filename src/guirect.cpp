@@ -15,6 +15,19 @@
 #include "gui.h"
 
 
+int GUIdefx = 0;
+int GUIdefy = 0;
+
+void nextGUIdef() {
+  GUIdefx += 20;
+  GUIdefy += 20;
+}
+
+void resetGUIdef() {
+  GUIdefx = SCREENX / 14;
+  GUIdefy = SCREENY / 14;
+}
+
 GUIrect *GUIrect::modal = NULL;
 void GUIrect::setmodal(GUIrect* modal) {
   GUIrect::modal = modal;

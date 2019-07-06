@@ -186,12 +186,17 @@ void GetFileExtension(char *fullname, char *ext)
 
 int volbatch::read(char *volfilename)
 {
+/*
+  THIS HORRIBLE HACK CODE ATTEMPTS TO SET
+  THE MEMBER VARIABLES OF `this` WHICH WILL
+  BE A SUBCHILD Of `volbatch`
+*/
  volumefile v;
  if (v.open(volfilename)) return 0;
 // printf("%s vol opened\n",volfilename);
 
  //find number of pointers to be read
- int num=(size()-sizeof(volbatch))/4;
+ int num=(size()-sizeof(volbatch))/sizeof(void*);
 
  //get pointer to first pointer
  void **p= (void **) (((char *)this)+sizeof(volbatch));
@@ -213,7 +218,7 @@ int volbatch::read(char *volfilename)
 void volbatch::free()
 {
  //find number of pointers
- int num=(size()-sizeof(volbatch))/4;
+ int num=(size()-sizeof(volbatch))/sizeof(void*);
 
  //get pointer to first pointer
  void **p= (void **) (((char *)this)+sizeof(volbatch));
@@ -226,7 +231,7 @@ void volbatch::free()
 void volbatch::print()
 {
  //find number of pointers
- int num=(size()-sizeof(volbatch))/4;
+ int num=(size()-sizeof(volbatch))/sizeof(void*);
 
  //get pointer to first pointer
  void **p= (void **) (((char *)this)+sizeof(volbatch));

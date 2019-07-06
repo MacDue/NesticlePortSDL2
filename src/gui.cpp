@@ -121,6 +121,7 @@ int GUIbutton::release(class mouse &m) {
   return result;
 }
 
+
 void GUIbutton::draw(char* dest) {
   if (this->depressed) {
     this->fill(/*color=*/27);

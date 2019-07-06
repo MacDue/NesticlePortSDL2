@@ -10,9 +10,8 @@
 
 
 //header for each entry in the volume file
-struct header
-{
-char key[4];   //must be "DSL"    
+struct __attribute__ ((packed)) header {
+char key[4];   //must be "DSL"
 char type;     //type of data
 unsigned size; //size of data
 char name[9];  //name of data
@@ -47,7 +46,7 @@ void writemidi(char *filename);
 void writescreen(char *filename);
 void writepalette(char *filename);
 void writerangeblock(char *path,int num,char type); //1,2,3,...num
-void writelistblock(char *listfile,char type); 
+void writelistblock(char *listfile,char type);
 void writesound(char *filename);
 void writeimage(char *filename);
 
@@ -85,10 +84,3 @@ extern int vwerror;
 void GetFileName(char *fullname, char *name);
 void GetFileExtension(char *fullname, char *ext);
 #endif
-
-
-
-
-
-
-

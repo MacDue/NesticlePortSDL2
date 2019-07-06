@@ -1,6 +1,6 @@
 //struct of an array of pointers to which an entire
 //vol file can be read
-struct volbatch
+struct __attribute__ ((packed)) volbatch
 {
  virtual int size()=0;
  int read(char *volfilename); //read each pointer as a sequential element of vol file

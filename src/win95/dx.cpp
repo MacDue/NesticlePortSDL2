@@ -484,6 +484,7 @@ void enable() {timerdisabled=0;}
 //----------------------------------------------------
 void cleanup();
 
+#ifndef SDL2
 int initialize()
 {
  // //initialize directdraw
@@ -525,9 +526,11 @@ void cleanup()
  // if (timerid) {timeKillEvent(timerid); timerid=0;}
  // ShowCursor(TRUE);
 }
+#endif
 
 
 //fills backbuffer with color
+#ifndef SDL2
 void drawrect(char *dest,int color,int x,int y,int xw,int yw)
 {
 // // dest=dest;
@@ -551,6 +554,7 @@ void drawrect(char *dest,int color,int x,int y,int xw,int yw)
 //  ddsd.dwSize = sizeof( ddsd );
 //  ddbackbuffer->Lock( NULL, &ddsd, DDLOCK_WAIT, NULL );
 }
+#endif
 
 
 

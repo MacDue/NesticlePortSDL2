@@ -1,7 +1,11 @@
 #include "volbatch.h"
 
 //data from guivol
-struct GUIVOL:volbatch
+struct
+#ifdef SDL2
+__attribute__ ((packed))
+#endif
+GUIVOL:volbatch
 {
  struct PALETTE *pal; //default palette
  struct IMG *cursor; //cursor
@@ -18,6 +22,3 @@ struct GUIVOL:volbatch
  virtual int size();
 };
 extern GUIVOL guivol;
-
-
-

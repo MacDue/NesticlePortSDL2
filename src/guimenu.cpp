@@ -210,6 +210,11 @@ void GUImenu::losefocus() {
 }
 
 
+void GUImenu::losechildfocus() {
+  ;
+}
+
+
 int GUImenu::domenuitem(menuitem *i) {
   if (i) {
     i->menufunc();
@@ -295,7 +300,7 @@ void GUIhmenu::draw(char* dest) {
     154,
     this->x1,
     this->y1,
-    this->x1 - item_x,
+    this->width(),
     this->height());
   for (class menuitem* item = this->tmenu->m; item->text; item++) {
     if (item == this->selmi) {
@@ -320,6 +325,22 @@ class menuitem* GUIhmenu::menuhittest(int x, int y, int &sx, int &sy) {
     }
   }
   return NULL;
+}
+
+int GUIhmenu::keyhit(char kbscan, char key) {
+  int result;
+  if (key) {
+    for (class menuitem* item = this->tmenu->m; item->text; item++) {
+      /* kbscan == *item in dis (but that seems wrong) */
+      if (item->submenu && item->submenu->keyhit(kbscan, key)) {
+        return 1;
+      }
+    }
+    result = 0;
+  } else {
+    result = 0;
+  }
+  return result;
 }
 
 /* GUIpopupmenu */
@@ -359,4 +380,9 @@ int GUIpopupmenu::release(mouse &m) {
 void GUIpopupmenu::draw(char* dest) {
   GUIvmenu::draw(dest);
   GUIrect::outline(0);
+}
+
+
+GUIpopupmenu::~GUIpopupmenu() {
+  GUIrect::setmodal(NULL);
 }

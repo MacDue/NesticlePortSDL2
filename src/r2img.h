@@ -33,7 +33,7 @@ void line(char *dest, int x1, int y1, int x2, int y2, int Color);
 
 #define MAXFADELEVEL 32
 //rbg
-struct COLOR
+struct __attribute__ ((packed)) COLOR
 {
  unsigned char r,g,b;
  void fade(COLOR &d,int level);
@@ -41,7 +41,7 @@ struct COLOR
 
 #define MAX_PALTETTE_SIZE 256
 //palette
-struct PALETTE
+struct __attribute__ ((packed)) PALETTE
 {
  COLOR c[MAX_PALTETTE_SIZE]; //colors in palette
 
@@ -52,7 +52,7 @@ struct PALETTE
 };
 
 //color index mapping
-struct COLORMAP
+struct __attribute__ ((packed)) COLORMAP
 {
  char c[256];
  COLORMAP() {};
@@ -62,7 +62,7 @@ struct COLORMAP
 
 
 //bitmap header
-struct BMAP {
+struct __attribute__ ((packed)) BMAP {
  int type; //type byte
  int size; //size of image structure in bytes
  int xw,yw; //dimensions
@@ -77,7 +77,7 @@ struct BMAP {
 #define IMG_FLIPY 1
 #define IMG_FLIPX 2
 
-struct IMG:BMAP
+struct __attribute__ ((packed)) IMG:BMAP
 {
  //int ydisp[]; //offset from beginning of struct for each scanline
  //char data[]; //data for rle bitmap
@@ -97,7 +97,7 @@ struct IMG:BMAP
 
 //uncompressed
 #define SCR_TYPE 2
-struct SCR:BMAP
+struct __attribute__ ((packed)) SCR:BMAP
 {
  //char data[]; //data for uncompressed bitmap
 
