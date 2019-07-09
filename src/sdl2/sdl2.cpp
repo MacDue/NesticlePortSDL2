@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "config.h"
 #include "dd.h"
+#include "mouse.h"
 
 extern char configfile[];
 extern char appname[];
@@ -12,6 +13,8 @@ void terminategame();
 void gametimer();
 
 void enablegui();
+
+void DEBUG_OPEN_ABOUT();
 
 void cleanup()
 {
@@ -76,6 +79,8 @@ int initialize()
   return !sdl_setup;
 }
 
+class mouse m;
+
 int main(int argc, char* argv[]) {
   cfg=new config();
   cfg->load(configfile);
@@ -90,17 +95,34 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  // DEBUG_OPEN_ABOUT();
   bool loop_alive = true;
+
+  SDL_ShowCursor(SDL_DISABLE);
   SDL_Event event;
   while(loop_alive) {
-    SDL_SetRenderDrawColor(sdl_state.renderer, 0, 0, 255, 255);
+    SDL_SetRenderDrawColor(sdl_state.renderer, 0, 0, 0, 255);
     SDL_RenderClear(sdl_state.renderer);
 
     while(SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT) {
-        loop_alive = false;
+      switch (event.type) {
+        case SDL_QUIT:
+          loop_alive = false;
+          break;
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+        {
+          int mb = 0;
+          if (event.button.button == SDL_BUTTON_LEFT)  mb |= 1;
+          if (event.button.button == SDL_BUTTON_RIGHT) mb |= 2;
+          m.updatebut(mb);
+        }
+
       }
     }
+    int mouse_x, mouse_y;
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+    m.updatexy(mouse_x, mouse_y);
     updatescreen();
     SDL_RenderPresent(sdl_state.renderer);
   }

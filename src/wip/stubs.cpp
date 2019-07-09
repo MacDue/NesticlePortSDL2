@@ -7,8 +7,6 @@
 uint8_t M_RDMEM(uint16_t) { STUB_BODY };
 void M_WRMEM(uint16_t, uint8_t) { STUB_BODY };
 
-class mouse m;
-
 DWORD m6502clockticks = 0;
 BYTE* m6502Base = NULL;
 

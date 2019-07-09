@@ -1,27 +1,20 @@
 #include <SDL.h>
 #include <cstdint>
 #include "r2img.h"
+#include "guivol.h"
 #include "wip/stubs.h"
 
 
-#define TO_RGB(color)
+extern GUIVOL guivol;
 
-struct RGB {
-  uint8_t r, g, b;
-};
+#define GetRValue(rgb)  (static_cast<uint8_t>((rgb) >> 16))
+#define GetGValue(rgb)  (static_cast<uint8_t>((rgb) >> 8))
+#define GetBValue(rgb)  (static_cast<uint8_t>((rgb)))
 
 
-struct RGB to_rgb(char byte_color) {
-  struct RGB rgb {
-    (byte_color >> 5) * 32,
-    ((byte_color & 0b11100) >> 2) * 32,
-    (byte_color & 0b11) * 64,
-  };
-  return rgb;
+void __cdecl drawhline(char *d,int color,int x,int y,int x2) {
+  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
 }
-
-
-void __cdecl drawhline(char *d,int color,int x,int y,int x2) { STUB_BODY }
 
 void __cdecl drawvline(char *d,int color,int x,int y,int y2) { STUB_BODY }
 
@@ -34,27 +27,39 @@ void drawrect(char *dest,int color,int x,int y,int xw,int yw) {
   r.w=xw;
   r.h=yw;
 
-  printf("%d %d %d %d\n", r.x, r.y, r.w, r.h);
-
-  uint8_t red = (color & 0xFF000000) >> 24;
-  uint8_t green = (color & 0x00FF0000) >> 16;
-  uint8_t blue = (color & 0x0000FF00) >> 8;
-
-
-
-  SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
+  SDL_SetRenderDrawColor(renderer, GetRValue(color), GetGValue(color), GetBValue(color), 255);
   SDL_RenderFillRect(renderer, &r);
 }
 
-void __cdecl drawimager2(struct IMG *s,char *d,int x,int y,int o) {
+void __cdecl drawimager2(struct IMG *s,char *d,int draw_x,int draw_y,int o) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
-  char* img_data = s->data();
+  PALETTE* palette = guivol.pal;
 
-  for (int dx=x; dx < x+s->xw; dx++) {
-    for (int dy=y; dy < y+s->yw; dy++) {
-      struct RGB color = to_rgb(img_data[(dx-x)+(dy-y)*s->xw]);
-      SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-      SDL_RenderDrawPoint(renderer, dx, dy);
+  int* ydisp = s->ydisp();
+  uint8_t* image_bytes = reinterpret_cast<int8_t*>(s);
+  for (int y = 0; y < s->yw; y++) {
+    int row_offset = ydisp[y];
+
+    int x = s->xw;
+    while (x > 0) {
+      // Transparent pixels (skip)
+      int runlen = image_bytes[row_offset++];
+      x -= runlen;
+
+      if (x <= 0) {
+        break;
+      }
+
+      // Opaque pixels
+      runlen = image_bytes[row_offset++];
+
+      while (runlen --> 0 and x --> 0) {
+        int pallete_idx = image_bytes[row_offset++];
+        // Horribly wasteful
+        COLOR color = palette->c[pallete_idx];
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+        SDL_RenderDrawPoint(renderer, draw_x + (s->xw -1 - x), draw_y + y);
+      }
     }
   }
 }

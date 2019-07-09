@@ -126,6 +126,10 @@ DLGPOS aboutdlg::pos;
 
 
 
+void DEBUG_OPEN_ABOUT(){
+  aboutdlg::open();
+}
+
 
 
 

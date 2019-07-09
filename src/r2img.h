@@ -1,3 +1,5 @@
+#include <cstdint>
+
 extern "C" {
  void __cdecl drawimager2(struct IMG *s,char *d,int x,int y,int o);
  void __cdecl loadpalette8(struct VBE_palette *c,int first,int num);
@@ -35,7 +37,7 @@ void line(char *dest, int x1, int y1, int x2, int y2, int Color);
 //rbg
 struct __attribute__ ((packed)) COLOR
 {
- unsigned char r,g,b;
+ uint8_t r,g,b;
  void fade(COLOR &d,int level);
 };
 
@@ -54,7 +56,7 @@ struct __attribute__ ((packed)) PALETTE
 //color index mapping
 struct __attribute__ ((packed)) COLORMAP
 {
- char c[256];
+ int8_t c[256];
  COLORMAP() {};
  void clear();
  void createshademap(PALETTE &p,int rl,int gl,int bl);
@@ -63,9 +65,9 @@ struct __attribute__ ((packed)) COLORMAP
 
 //bitmap header
 struct __attribute__ ((packed)) BMAP {
- int type; //type byte
- int size; //size of image structure in bytes
- int xw,yw; //dimensions
+ int32_t type; //type byte
+ int32_t size; //size of image structure in bytes
+ int32_t xw,yw; //dimensions
 
  void write(char *file); //writes bitmap to file
  void draw(char *d,int x,int y,int o); //draw
