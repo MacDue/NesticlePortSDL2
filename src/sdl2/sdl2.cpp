@@ -101,23 +101,22 @@ int main(int argc, char* argv[]) {
   SDL_ShowCursor(SDL_DISABLE);
   SDL_Event event;
   while(loop_alive) {
+    m.reset();
     SDL_SetRenderDrawColor(sdl_state.renderer, 0, 0, 0, 255);
     SDL_RenderClear(sdl_state.renderer);
 
     while(SDL_PollEvent(&event)) {
+      int mb = 0;
       switch (event.type) {
         case SDL_QUIT:
           loop_alive = false;
           break;
         case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        {
-          int mb = 0;
           if (event.button.button == SDL_BUTTON_LEFT)  mb |= 1;
           if (event.button.button == SDL_BUTTON_RIGHT) mb |= 2;
+        case SDL_MOUSEBUTTONUP:
           m.updatebut(mb);
-        }
-
+          break;
       }
     }
     int mouse_x, mouse_y;

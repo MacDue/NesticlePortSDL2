@@ -266,7 +266,7 @@ class menuitem* GUIvmenu::menuhittest(int x, int y, int &sx, int &sy) {
   int current_height = 0;
   class menuitem* item;
   for (item = this->tmenu->m ; ; item++) {
-    if (!item) {
+    if (!item->text) {
       return NULL;
     }
     current_height += item->height();

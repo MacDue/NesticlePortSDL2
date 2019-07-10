@@ -89,7 +89,7 @@ void GUIrect::moveto(int x, int y) {
 
 
 void GUIrect::draw(char* dest) {
-  for (GUIrect* c = this->lastchild; c; c = this->prev) {
+  for (GUIrect* c = this->lastchild; c; c = c->prev) {
     /* TODO is this right so far */
     c->draw(dest);
   }

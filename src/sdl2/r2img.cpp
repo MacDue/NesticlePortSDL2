@@ -7,19 +7,32 @@
 
 extern GUIVOL guivol;
 
-#define GetRValue(rgb)  (static_cast<uint8_t>((rgb) >> 16))
-#define GetGValue(rgb)  (static_cast<uint8_t>((rgb) >> 8))
-#define GetBValue(rgb)  (static_cast<uint8_t>((rgb)))
+// #define GetRValue(rgb)  (static_cast<uint8_t>((rgb) >> 16))
+// #define GetGValue(rgb)  (static_cast<uint8_t>((rgb) >> 8))
+// #define GetBValue(rgb)  (static_cast<uint8_t>((rgb)))
 
 
 void __cdecl drawhline(char *d,int color,int x,int y,int x2) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
+  PALETTE* palette = guivol.pal;
+  COLOR rgb_color = palette->c[color];
+  SDL_SetRenderDrawColor(renderer, rgb_color.r, rgb_color.g, rgb_color.b, 255);
+  SDL_RenderDrawLine(renderer, x, y, x2, y);
 }
 
-void __cdecl drawvline(char *d,int color,int x,int y,int y2) { STUB_BODY }
+void __cdecl drawvline(char *d,int color,int x,int y,int y2) {
+  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
+  PALETTE* palette = guivol.pal;
+  COLOR rgb_color = palette->c[color];
+  SDL_SetRenderDrawColor(renderer, rgb_color.r, rgb_color.g, rgb_color.b, 255);
+  SDL_RenderDrawLine(renderer, x, y, x, y2);
+}
 
 void drawrect(char *dest,int color,int x,int y,int xw,int yw) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(dest);
+  PALETTE* palette = guivol.pal;
+  COLOR rgb_color = palette->c[color];
+
   SDL_Rect r;
 
   r.x=(x>=0) ? x : 0;
@@ -27,7 +40,7 @@ void drawrect(char *dest,int color,int x,int y,int xw,int yw) {
   r.w=xw;
   r.h=yw;
 
-  SDL_SetRenderDrawColor(renderer, GetRValue(color), GetGValue(color), GetBValue(color), 255);
+  SDL_SetRenderDrawColor(renderer, rgb_color.r, rgb_color.g, rgb_color.b, 255);
   SDL_RenderFillRect(renderer, &r);
 }
 
