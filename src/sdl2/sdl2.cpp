@@ -14,8 +14,6 @@ void gametimer();
 
 void enablegui();
 
-void DEBUG_OPEN_ABOUT();
-
 void cleanup()
 {
   terminategame();
@@ -95,7 +93,6 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  // DEBUG_OPEN_ABOUT();
   bool loop_alive = true;
 
   SDL_ShowCursor(SDL_DISABLE);

@@ -125,14 +125,6 @@ class aboutdlg:public GUIcontents
 DLGPOS aboutdlg::pos;
 
 
-
-void DEBUG_OPEN_ABOUT(){
-  aboutdlg::open();
-}
-
-
-
-
 //--------------------------------------
 void disablegui();
 
