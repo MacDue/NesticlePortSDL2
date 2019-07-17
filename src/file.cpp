@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <cstdint>
+#include <filesystem>
 
 #include "file.h"
 
@@ -40,6 +41,12 @@ void enumdir(char *path, DIRFUNCPTR func,void *context)
  //  }
  // _dos_findclose(&ff);
  // #endif
+ //TODO: Make work with glob path
+ for (auto const &entry : std::filesystem::directory_iterator("./")) {
+   if (!func(entry.path().filename().c_str(), context)) {
+     break;
+   }
+ }
 }
 
 #endif

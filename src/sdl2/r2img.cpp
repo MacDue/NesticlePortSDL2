@@ -7,44 +7,41 @@
 
 extern GUIVOL guivol;
 
-#define GetAValue(argb)  (static_cast<uint8_t>(static_cast<uint32_t>((argb)) >> 24))
-#define GetRValue(argb)  (static_cast<uint8_t>(static_cast<uint32_t>((argb)) >> 16))
-#define GetGValue(argb)  (static_cast<uint8_t>(static_cast<uint32_t>((argb)) >> 8))
-#define GetBValue(argb)  (static_cast<uint8_t>(static_cast<uint32_t>((argb))))
+#define GetAValue(argb)  (static_cast<uint8_t>((argb) >> 24))
+#define GetRValue(argb)  (static_cast<uint8_t>((argb) >> 16))
+#define GetGValue(argb)  (static_cast<uint8_t>((argb) >> 8))
+#define GetBValue(argb)  (static_cast<uint8_t>((argb)))
 
 
-void __cdecl drawhline(char *d,int color,int x,int y,int x2) {
+void __cdecl drawhline(char *d,int pallete_idx,int x,int y,int x2) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
-  SDL_SetRenderDrawColor(renderer,
-    GetRValue(color),
-    GetGValue(color),
-    GetBValue(color),
-    GetAValue(color));
+  PALETTE* palette = guivol.pal;
+  pallete_idx &= 0xff;
+  COLOR color = palette->c[pallete_idx];
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
   SDL_RenderDrawLine(renderer, x, y, x2, y);
 }
 
-void __cdecl drawvline(char *d,int color,int x,int y,int y2) {
+void __cdecl drawvline(char *d,int pallete_idx,int x,int y,int y2) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
-  SDL_SetRenderDrawColor(renderer,
-    GetRValue(color),
-    GetGValue(color),
-    GetBValue(color),
-    GetAValue(color));
+  PALETTE* palette = guivol.pal;
+  pallete_idx &= 0xff;
+  COLOR color = palette->c[pallete_idx];
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
   SDL_RenderDrawLine(renderer, x, y, x, y2);
 }
 
-void drawrect(char *dest,int color,int x,int y,int xw,int yw) {
+void drawrect(char *dest,int pallete_idx,int x,int y,int xw,int yw) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(dest);
+  PALETTE* palette = guivol.pal;
+  pallete_idx &= 0xff;
+  COLOR color = palette->c[pallete_idx];
   SDL_Rect r;
   r.x=(x>=0) ? x : 0;
   r.y=(y>=0) ? y : 0;
   r.w=xw;
   r.h=yw;
-  SDL_SetRenderDrawColor(renderer,
-    GetRValue(color),
-    GetGValue(color),
-    GetBValue(color),
-    GetAValue(color));
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
   SDL_RenderFillRect(renderer, &r);
 }
 

@@ -854,8 +854,7 @@ void GUIlistbox::freeitems() {
 ITEMPTR* GUIlistbox::resizeitems(int n) {
   this->items = realloc(this->items, sizeof(ITEMPTR) * n);
   while (n > this->numitems) {
-    this->numitems++;
-    this->items[this->numitems] = NULL;
+    this->items[this->numitems++] = NULL;
   }
   this->numitems = n;
   if (n <= this->sel) {
