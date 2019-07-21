@@ -112,6 +112,7 @@ void cleanexit(int x)
 }
 
 //sets the video mode
+#ifndef SDL2
 int setddrawmode(int xw,int yw)
 {
  // if (!DDO) return -1;
@@ -130,7 +131,7 @@ int setddrawmode(int xw,int yw)
  // return 0;
  return -1;
 }
-
+#endif
 //creates primary and backbuffer ddraw surfaces
 int createsurfaces()
 {
@@ -274,6 +275,7 @@ void ddrawinfo()
 }
 
 
+#ifndef SDL2
 void changeresolution(int xw,int yw)
 {
  // if (!DDO) return;
@@ -288,6 +290,7 @@ void changeresolution(int xw,int yw)
  //
  // msg.printf(2,"DirectDraw mode set: %dx%dx%d",SCREENX,SCREENY,8);
 }
+#endif
 
 //initialize direct sound
 int initdsound(HWND hwnd)
@@ -709,12 +712,13 @@ extern int fps; void fuck();
 //  return msg.wParam;
 // }
 
+#ifndef SDL2
 void quitgame()
 {
  // DestroyWindow( hwnd );
  // ActiveApp=0;
 }
-
+#endif
 
 // LRESULT CALLBACK WndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 //      {

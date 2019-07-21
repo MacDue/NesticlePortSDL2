@@ -3,6 +3,7 @@
 #include "config.h"
 #include "dd.h"
 #include "mouse.h"
+#include "message.h"
 
 extern char configfile[];
 extern char appname[];
@@ -14,24 +15,26 @@ void gametimer();
 
 void enablegui();
 
-void cleanup()
-{
-  terminategame();
- // terminatedsound();
- // terminateddraw();
- // if (timerid) {timeKillEvent(timerid); timerid=0;}
- // ShowCursor(TRUE);
-}
-
 static struct SDL_State {
   SDL_Window* window;
   SDL_Renderer* renderer;
+  bool running;
 } sdl_state;
 
+static void destroy_SDL2(struct SDL_State* sdl_state) {
+  if (sdl_state->window != NULL) {
+    SDL_DestroyWindow(sdl_state->window);
+  }
+  if (sdl_state->renderer != NULL) {
+    SDL_DestroyRenderer(sdl_state->renderer);
+  }
+  SDL_Quit();
+}
 
 static bool setup_SDL2(struct SDL_State* sdl_state) {
   sdl_state->window = NULL;
   sdl_state->renderer = NULL;
+  sdl_state->running = true;
 
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     fprintf(stderr, "Failed to start SDL (%s)\n", SDL_GetError());
@@ -58,14 +61,22 @@ static bool setup_SDL2(struct SDL_State* sdl_state) {
   return true;
 
 sdl_error:
-  if (sdl_state->window != NULL) {
-    SDL_DestroyWindow(sdl_state->window);
-  }
-  if (sdl_state->renderer != NULL) {
-    SDL_DestroyRenderer(sdl_state->renderer);
-  }
-  SDL_Quit();
+  destroy_SDL2(sdl_state);
   return false;
+}
+
+void cleanup()
+{
+  terminategame();
+ // terminatedsound();
+ // terminateddraw();
+ // if (timerid) {timeKillEvent(timerid); timerid=0;}
+ // ShowCursor(TRUE);
+  destroy_SDL2(&sdl_state);
+}
+
+void quitgame() {
+  sdl_state.running = false;
 }
 
 char *screen = NULL;
@@ -75,6 +86,43 @@ int initialize()
   bool sdl_setup = setup_SDL2(&sdl_state);
   screen = reinterpret_cast<char*>(sdl_state.renderer);
   return !sdl_setup;
+}
+
+int setddrawmode(int xw,int yw)
+{
+  if (!sdl_state.window) {
+    return -1;
+  }
+  SDL_SetWindowSize(sdl_state.window, xw, yw);
+ // if (!DDO) return -1;
+ //
+ // //set video mode
+ // HRESULT err;
+ // if ((err=DDO->SetDisplayMode(xw,yw,8,0,0))!=DD_OK) return err;
+ //
+ SCREENX=xw; SCREENY=yw;
+ //
+ // //clip cursor
+ // RECT r;
+ // r.left=0; r.right=SCREENX;
+ // r.top=0; r.bottom=SCREENY;
+ // ClipCursor(&r);
+ return 0;
+}
+
+void changeresolution(int xw,int yw)
+{
+ // if (!DDO) return;
+ //
+ // releasesurfaces();
+ if (setddrawmode(xw,yw))
+  {
+  msg.error("%dx%d mode not supported",xw,yw);
+   setddrawmode(SCREENX,SCREENY);
+  }
+ // createsurfaces();
+ //
+  msg.printf(2,"DirectDraw mode set: %dx%dx%d",SCREENX,SCREENY,8);
 }
 
 class mouse m;
@@ -93,11 +141,9 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-  bool loop_alive = true;
-
   SDL_ShowCursor(SDL_DISABLE);
   SDL_Event event;
-  while(loop_alive) {
+  while(sdl_state.running) {
     m.reset();
     SDL_SetRenderDrawColor(sdl_state.renderer, 0, 0, 0, 255);
     SDL_RenderClear(sdl_state.renderer);
@@ -106,7 +152,7 @@ int main(int argc, char* argv[]) {
       int mb = 0;
       switch (event.type) {
         case SDL_QUIT:
-          loop_alive = false;
+          sdl_state.running = false;
           break;
         case SDL_MOUSEBUTTONDOWN:
           if (event.button.button == SDL_BUTTON_LEFT)  mb |= 1;
