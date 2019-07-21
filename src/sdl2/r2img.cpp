@@ -6,44 +6,36 @@
 
 
 extern GUIVOL guivol;
+extern int SCREENX, SCREENY;
 
-#define GetAValue(argb)  (static_cast<uint8_t>((argb) >> 24))
-#define GetRValue(argb)  (static_cast<uint8_t>((argb) >> 16))
-#define GetGValue(argb)  (static_cast<uint8_t>((argb) >> 8))
-#define GetBValue(argb)  (static_cast<uint8_t>((argb)))
+
+static inline SDL_Renderer* set_render_color(char* dest, uint8_t pallete_idx) {
+  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(dest);
+  PALETTE* palette = guivol.pal;
+  COLOR color = palette->c[pallete_idx];
+  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+  return renderer;
+}
 
 
 void __cdecl drawhline(char *d,int pallete_idx,int x,int y,int x2) {
-  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
-  PALETTE* palette = guivol.pal;
-  pallete_idx &= 0xff;
-  COLOR color = palette->c[pallete_idx];
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-  SDL_RenderDrawLine(renderer, x, y, x2, y);
+  SDL_Renderer* renderer = set_render_color(d, pallete_idx);
+  SDL_RenderDrawLine(renderer, x, y, x2 - 1, y);
 }
+
 
 void __cdecl drawvline(char *d,int pallete_idx,int x,int y,int y2) {
-  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
-  PALETTE* palette = guivol.pal;
-  pallete_idx &= 0xff;
-  COLOR color = palette->c[pallete_idx];
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-  SDL_RenderDrawLine(renderer, x, y, x, y2);
+  SDL_Renderer* renderer = set_render_color(d, pallete_idx);
+  SDL_RenderDrawLine(renderer, x, y, x, y2 - 1);
 }
 
+
 void drawrect(char *dest,int pallete_idx,int x,int y,int xw,int yw) {
-  SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(dest);
-  PALETTE* palette = guivol.pal;
-  pallete_idx &= 0xff;
-  COLOR color = palette->c[pallete_idx];
-  SDL_Rect r;
-  r.x=(x>=0) ? x : 0;
-  r.y=(y>=0) ? y : 0;
-  r.w=xw;
-  r.h=yw;
-  SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+  SDL_Renderer* renderer = set_render_color(dest, pallete_idx);
+  SDL_Rect r{x, y, xw, yw};
   SDL_RenderFillRect(renderer, &r);
 }
+
 
 void __cdecl drawimager2(struct IMG *s,char *d,int draw_x,int draw_y,int o) {
   SDL_Renderer* renderer = reinterpret_cast<SDL_Renderer*>(d);
@@ -78,4 +70,7 @@ void __cdecl drawimager2(struct IMG *s,char *d,int draw_x,int draw_y,int o) {
   }
 }
 
-extern "C" void __cdecl drawscr(char *s,char *d,int xw,int yw,int pitch) { STUB_BODY }
+
+extern "C" void __cdecl drawscr(char *s,char *d,int xw,int yw,int pitch) {
+  STUB_BODY
+}

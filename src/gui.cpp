@@ -154,11 +154,11 @@ void GUIbutton::draw(char* dest) {
 GUItextbutton::GUItextbutton(GUIrect* parent, char* text, int x, int y)
   : GUIbutton(parent, x, y, 0, 0)
 {
-  int text_width = font[0]->getwidth(text);
-  this->bwidth = text_width + 12;
-  this->moverel(-(text_width + 12)/2, 0);
+  int bwidth = font[0]->getwidth(text) + 12;
+  this->bwidth = bwidth;
+  this->moverel(-bwidth/2, 0);
   this->x2 = this->x1 + this->bwidth;
-  this->y1 = this->y1 + 12;
+  this->y2 = this->y1 + 12;
   strcpy(this->text, text);
 }
 
@@ -464,8 +464,8 @@ GUIonebuttonbox::GUIonebuttonbox
   this->b1 = new GUItextbutton(
     this,
     b1name,
-    this->height() - 12,
-    this->width() / 2);
+    this->width() / 2,
+    this->height() - 12);
   this->contents->bringtofront();
 }
 
@@ -837,7 +837,7 @@ GUIlistbox::GUIlistbox(GUIrect* parent, int x, int y, int xw, int iy, int iheigh
   this->timer.clear();
   this->dblclick.clear();
   this->scroll = new GUIvscrollbar(this, 0, 0, this->height());
-  this->moveto(this->x2 - this->scroll->width(), this->y1);
+  this->scroll->moveto(this->x2 - this->scroll->width(), this->y1);
   this->clearsel();
   this->dblclick.set(0);
 }

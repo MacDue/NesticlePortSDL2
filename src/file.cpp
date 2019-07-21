@@ -19,6 +19,41 @@
 // #include <dos.h>
 #endif
 
+namespace fs = std::filesystem;
+
+
+static bool wildcard_match(char const * pattern, char const * string) {
+  for (; *pattern; pattern++) {
+    switch (*pattern) {
+      case '?': {
+        if (*string == '\0') {
+          return false;
+        }
+        string++;
+        break;
+      }
+      case '*': {
+        int max = strlen(string);
+        for (int i = 0; i < max; i++) {
+          if (wildcard_match(pattern+1, string+i)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      default: {
+        if (*string == '\0' or tolower(*string) != *pattern) {
+          return false;
+        }
+        string++;
+      }
+    }
+  }
+  return *string == '\0';
+}
+
+#include <iostream>
+
 //dir shit
 void enumdir(char *path, DIRFUNCPTR func,void *context)
 {
@@ -41,9 +76,15 @@ void enumdir(char *path, DIRFUNCPTR func,void *context)
  //  }
  // _dos_findclose(&ff);
  // #endif
- //TODO: Make work with glob path
- for (auto const &entry : std::filesystem::directory_iterator("./")) {
-   if (!func(entry.path().filename().c_str(), context)) {
+ for (auto const &entry : fs::directory_iterator("./")) {
+   auto fn = entry.path().filename();
+   const char* c_fn = fn.c_str();
+   if (!fs::is_regular_file(entry.status())
+        || !wildcard_match(path, c_fn)
+   ) {
+     continue;
+   }
+   if (!func(const_cast<char*>(c_fn), context)) {
      break;
    }
  }
