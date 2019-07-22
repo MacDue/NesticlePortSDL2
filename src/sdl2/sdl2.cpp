@@ -1,9 +1,11 @@
 #include <cstdio>
+#include <chrono>
 #include <SDL.h>
 #include "config.h"
 #include "dd.h"
 #include "mouse.h"
 #include "message.h"
+#include "timing.h"
 
 extern char configfile[];
 extern char appname[];
@@ -14,6 +16,20 @@ void terminategame();
 void gametimer();
 
 void enablegui();
+
+typedef uint32_t DWORD;
+
+int timeperframe = 0;
+static DWORD lasttime;
+static int lastgettime;
+
+DWORD timeGetTime() {
+  using namespace std::chrono;
+  milliseconds ms = duration_cast<milliseconds>(
+    steady_clock::now().time_since_epoch()
+  );
+  return ms.count();
+}
 
 static struct SDL_State {
   SDL_Window* window;
@@ -165,6 +181,19 @@ int main(int argc, char* argv[]) {
     int mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
     m.updatexy(mouse_x, mouse_y);
+
+    #ifndef TIMERCALLBACK
+    {
+      timeperframe+=timeGetTime()-lastgettime; //ms
+      lastgettime=timeGetTime();
+    }
+    while (timeGetTime()>lasttime+(1000/TIMERSPEED))
+    {
+      gametimer();
+      lasttime+=(1000/TIMERSPEED);
+    }
+    #endif
+
     updatescreen();
     SDL_RenderPresent(sdl_state.renderer);
   }

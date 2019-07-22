@@ -1,0 +1,3 @@
+[submodule "src/mos6502"]
+	path = src/mos6502
+	url = https://github.com/gianlucag/mos6502.git

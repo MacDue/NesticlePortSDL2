@@ -18,10 +18,10 @@ extern "C" {
 struct bitmap8x8
 {
  byte s[8][8];
- void draw_tile(char *dest,int x,int y)
-  {draw_tile_asm(this,dest,x,y);} //draw as tile
- void draw_sprite(char *dest,int x,int y,int o) //draw as sprite (transparency and orientation)
-  {draw_sprite_asm(this,dest,x,y,o);} //draw as sprite
+ void draw_tile(char *dest,int x,int y);
+//  {draw_tile_asm(this,dest,x,y);} //draw as tile
+ void draw_sprite(char *dest,int x,int y,int o); //draw as sprite (transparency and orientation)
+  // {draw_sprite_asm(this,dest,x,y,o);} //draw as sprite
 
  void add_tile(byte b); //add b to every pixel in bitmap
  void add_sprite(byte b); //add b to every pixel in bitmap (except 0)
