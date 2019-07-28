@@ -145,7 +145,7 @@ void NES_ppumemory::write(word a,byte d)
  if (a>=0x3F00 && a<0x3F20)
   {
    if (((byte *)this)[a]==d) return; //no change
-//   msg.printf(1,"pal[%X]=%X",a-0x3f00,d);
+  // msg.printf(1,"pal[%X]=%X",a-0x3f00,d);
 
    if (!(a&0xF)) //it's a background palette...
     {

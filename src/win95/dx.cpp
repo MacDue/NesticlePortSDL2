@@ -229,6 +229,7 @@ void setpalette(PALETTE *pal)
 }
 
 //set individual palette index
+#ifndef SDL2
 void setpalettenum(int index,COLOR *c)
 {
 //  PALETTEENTRY p;
@@ -240,6 +241,7 @@ void setpalettenum(int index,COLOR *c)
 //  ddpalette->SetEntries(0,index,1,&p);
 // // msg.printf(1,"palentry[%d]=%d,%d,%d",index,c->r,c->g,c->b);
 }
+#endif
 
 
 void ddrawinfo()

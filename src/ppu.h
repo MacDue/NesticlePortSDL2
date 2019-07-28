@@ -5,38 +5,38 @@
 #include "types.h"
 
 //struct representing a pattern in the pattern table of the PPU memory
-struct NES_pattern
+struct __attribute__ ((packed)) NES_pattern
 {
  char low[8];  //low bits of pixel data
  char high[8]; //high bits of pixel data
 };
 
 //struct representing a whole pattern table of the PPU memory
-struct NES_patterntable
+struct __attribute__ ((packed)) NES_patterntable
 {
  NES_pattern p[256];
 };
 
 //struct representing a name table
-struct NES_nametable
+struct __attribute__ ((packed)) NES_nametable
 {
  char t[30][32]; //indices into pattern table
 };
 
 //struct representing attribute table
-struct NES_attributetable
+struct __attribute__ ((packed)) NES_attributetable
 {
  byte a[8][8];
  byte getat(int x,int y); //get attribute of tile at x,y
 };
 
-struct NES_palette
+struct __attribute__ ((packed)) NES_palette
 {
  char c[16]; //??? dunno how this is stored
 };
 
 //combination name /attribute table
-struct NES_natable
+struct __attribute__ ((packed)) NES_natable
 {
  NES_nametable nt;
  NES_attributetable at;
@@ -48,7 +48,7 @@ struct NES_natable
 
 };
 
-struct NES_ppumemory
+struct __attribute__ ((packed)) NES_ppumemory
 {
  NES_patterntable pt[2]; //2 pattern tables
 
@@ -67,7 +67,7 @@ struct NES_ppumemory
  void write(word a,byte d);
 };
 
-struct NES_sprite
+struct __attribute__ ((packed)) NES_sprite
 {
  byte y; //y position -1
  byte p; //pattern number

@@ -42,6 +42,7 @@ void enable();
 extern char errstr[80];
 void cleanexit(int x);
 
+#include "sdl2/ddmimic.h"
 
 //functions that need to be supplied by the game
 int  initgame();
@@ -89,7 +90,8 @@ class CLIP
    if (x2>SCREENX) x2=SCREENX;
    if (y1<0) y1=0;
    if (y2>SCREENY) y2=SCREENY;
-   dest+=x1+y1*PITCH;
+   // dest+=x1+y1*PITCH;
+   dd_set_draw_offset(dest, x1, y1);
    SCREENX=x2-x1; SCREENY=y2-y1;
   };
  ~CLIP()

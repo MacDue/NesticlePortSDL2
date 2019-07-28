@@ -6,9 +6,15 @@
 #include "mouse.h"
 #include "message.h"
 #include "timing.h"
+#include "guivol.h"
+#include "r2img.h"
+#include "nesvideo.h"
+
+#include "sdl2/ddmimic.h"
 
 extern char configfile[];
 extern char appname[];
+extern GUIVOL guivol;
 
 int  initgame();
 void updatescreen();
@@ -95,12 +101,13 @@ void quitgame() {
   sdl_state.running = false;
 }
 
-char *screen = NULL;
+char *screen = reinterpret_cast<char*>(DDDestPtr::DEST_NORMAL);
 
 int initialize()
 {
   bool sdl_setup = setup_SDL2(&sdl_state);
-  screen = reinterpret_cast<char*>(sdl_state.renderer);
+  dd_set_renderer(sdl_state.renderer);
+  // screen = reinterpret_cast<char*>(sdl_state.renderer);
   return !sdl_setup;
 }
 
@@ -159,9 +166,17 @@ int main(int argc, char* argv[]) {
 
   SDL_ShowCursor(SDL_DISABLE);
   SDL_Event event;
+  COLOR clear_color = guivol.pal->c[/*fillColor=*/9*16+14];
   while(sdl_state.running) {
+    if (nv) nv->refreshpalette();
+
     m.reset();
-    SDL_SetRenderDrawColor(sdl_state.renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(
+      sdl_state.renderer,
+      clear_color.r,
+      clear_color.g,
+      clear_color.b,
+      255);
     SDL_RenderClear(sdl_state.renderer);
 
     while(SDL_PollEvent(&event)) {

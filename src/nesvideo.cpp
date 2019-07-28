@@ -288,7 +288,7 @@ void NES_natable::draw(char *dest,int sx,int sy,pattern *p)
 
  for (int y=ystart; y<yend; y++)
   for (int x=xstart; x<xend; x++)
-   p[nt.t[y][x]].tile[at.getat(x,y)].draw_tile(dest,sx+x*8,sy+y*8);
+   p[nt.t[y][x]&0xff].tile[at.getat(x,y)].draw_tile(dest,sx+x*8,sy+y*8);
 }
 
 extern int nttoshow;
