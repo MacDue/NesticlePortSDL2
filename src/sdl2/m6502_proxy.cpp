@@ -59,6 +59,5 @@ DWORD m6502nmi(void) {
 
 
 DWORD m6502exec(DWORD n) {
-  m6502clockticks += 4 * n; // approximate for test
-  mos6502.Run(n);
+  mos6502.Run(static_cast<int32_t>(n), m6502clockticks);
 }

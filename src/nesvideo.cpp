@@ -311,8 +311,8 @@ void nesvideo::drawbg(char *dest)
  ppu->nat[natnum^2].draw(dest,sx,sy+30*8,p);
  ppu->nat[natnum^3].draw(dest,sx+32*8,sy+30*8,p);
 
-//font[0]->printf(50,50,"scroll=%d,%d",scrollx,scrolly);
-//font[0]->printf(50,60,"nametable=%d ptable=%d",ram[0x2000]&3,(ram[0x2000]&16) ? 1 : 0);
+// font[0]->printf(50,50,"scroll=%d,%d",scrollx,scrolly);
+// font[0]->printf(50,60,"nametable=%d ptable=%d",ram[0x2000]&3,(ram[0x2000]&16) ? 1 : 0);
 }
 
 extern int blah;

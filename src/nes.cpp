@@ -250,7 +250,7 @@ int neswrite2000(WORD a,BYTE d)
           if (d<=239)
           {
            scrolly=d;
-  //         msg.printf(2,"line=%d %d,%d",scanline,scrollx,scrolly);
+          // msg.printf(2,"line=%d %d,%d",scanline,scrollx,scrolly);
           }
         scrollscanline=scanline;
        }

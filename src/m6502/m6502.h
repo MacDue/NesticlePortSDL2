@@ -38,13 +38,14 @@
  * with subsequent releases of M6502.
  *
  * The whole idea of this emulator is to have the fastest available 32 bit
- * Multi-6502 emulator for the PC, giving maximum performance. 
- */ 
+ * Multi-6502 emulator for the PC, giving maximum performance.
+ */
 
 /* General 6502 related goodies */
 
 #ifndef DWORD
-#define	DWORD	unsigned long int
+#include <stdint.h>
+#define	DWORD uint64_t
 #endif
 
 #ifndef WORD

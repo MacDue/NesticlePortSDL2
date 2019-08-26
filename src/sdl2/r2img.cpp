@@ -13,6 +13,15 @@ extern COLOR nespal[];
 extern int SCREENX, SCREENY;
 
 
+#define CLIP_TILE(x,y)                        \
+  int clipEndY = (y) + 8 - SCREENY;           \
+  if (clipEndY < 0) clipEndY = 0;             \
+  int clipEndX = (x) + 8 - SCREENX;           \
+  if (clipEndX < 0) clipEndX = 0;             \
+  int clipStartY = (y) < 0 ? abs((y)%8) : 0;  \
+  int clipStartX = (x) < 0 ? abs((x)%8) : 0;
+
+
 static inline SDL_Renderer* prepare_renderer(char* dest, int& x, int& y) {
   DDDestPtr dest_ptr = static_cast<DDDestPtr>(reinterpret_cast<size_t>(dest));
   SDL_Renderer* renderer = dd_get_renderer();
@@ -97,13 +106,10 @@ void __cdecl drawimager2(struct IMG *s,char *d,int draw_x,int draw_y,int o) {
 
 void bitmap8x8::draw_tile(char *dest,int x,int y)
 {
+  CLIP_TILE(x,y);
   SDL_Renderer* renderer = prepare_renderer(dest, x, y);
-
-  // if (x<0 || y<0) return; //clip left
-  // if (x+8>SCREENX || y+8>SCREENY) return; //clip bottomright
-
-  for (int i=0; i<8; i++) {
-    for (int j=0; j<8; j++) {
+  for (int i=clipStartY; i < 8 - clipEndY; i++) {
+    for (int j=clipStartX; j< 8 - clipEndX; j++) {
       set_render_color(renderer, s[i][j]);
       SDL_RenderDrawPoint(renderer, x+j, y+i);
     }
@@ -118,38 +124,36 @@ void bitmap8x8::draw_tile(char *dest,int x,int y)
 
 void bitmap8x8::draw_sprite(char *dest,int x,int y,int o)
 {
- // if (x<0 || y<0) return; //clip left
- // if (x+8>SCREENX || y+8>SCREENY) return; //clip bottomright
+ CLIP_TILE(x,y);
  SDL_Renderer* renderer = prepare_renderer(dest, x, y);
- PALETTE* palette = guivol.pal;
 
  switch (o & 0xff)
  {
   case 0: //normal
    {
-    for (int i=0; i<8; i++)
-     for (int j=0; j<8; j++)
+   for (int i=clipStartY; i < 8 - clipEndY; i++)
+    for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j, i, s[i][j]);
    }
    break;
   case 1: //flipx
    {
-   for (int i=0; i<8; i++)
-    for (int j=0; j<8; j++)
+   for (int i=clipStartY; i < 8 - clipEndY; i++)
+    for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j^7, i, s[i][j]);
    }
    break;
   case 2: //flipy
    {
-   for (int i=7; i>=0; i--)
-    for (int j=0; j<8; j++)
+   for (int i=clipStartY; i < 8 - clipEndY; i++)
+    for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j, i, s[i][j]);
    }
    break;
   case 3: //flipx|flipy
    {
-   for (int i=7; i>=0; i--)
-    for (int j=0; j<8; j++)
+   for (int i=clipStartY; i < 8 - clipEndY; i++)
+    for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j^7, i, s[i][j]);
    }
    break;
