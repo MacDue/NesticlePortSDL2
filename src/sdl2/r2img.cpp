@@ -117,8 +117,9 @@ void bitmap8x8::draw_tile(char *dest,int x,int y)
 }
 
 
-#define SET_PIXEL(i,j,p_idx) {                                          \
-    set_render_color(renderer, s[i][j]);                                \
+#define SET_PIXEL(i,j,p_idx) { \
+      printf("sprite col %d\n", p_idx);\
+    set_render_color(renderer, p_idx);                                  \
     SDL_RenderDrawPoint(renderer, x+(i), y+(j));                        \
   }
 
@@ -127,7 +128,7 @@ void bitmap8x8::draw_sprite(char *dest,int x,int y,int o)
  CLIP_TILE(x,y);
  SDL_Renderer* renderer = prepare_renderer(dest, x, y);
 
- switch (o & 0xff)
+ switch (o & 0b11)
  {
   case 0: //normal
    {
@@ -145,14 +146,14 @@ void bitmap8x8::draw_sprite(char *dest,int x,int y,int o)
    break;
   case 2: //flipy
    {
-   for (int i=clipStartY; i < 8 - clipEndY; i++)
+   for (int i = 7 - clipEndY; i>=clipStartY; i--)
     for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j, i, s[i][j]);
    }
    break;
   case 3: //flipx|flipy
    {
-   for (int i=clipStartY; i < 8 - clipEndY; i++)
+   for (int i = 7 - clipEndY; i>=clipStartY; i--)
     for (int j=clipStartX; j< 8 - clipEndX; j++)
       if (s[i][j]) SET_PIXEL(j^7, i, s[i][j]);
    }
