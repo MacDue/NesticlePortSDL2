@@ -13,6 +13,10 @@ Screenshot of Nesticle running on Ubuntu 20.04:
 
 This is mostly using the original code with some fixes, and some compiled code reverse engineered.
 
+This, however, does not use the original 6502 CPU emulator used in NESticle (since that was written in assembly and not portable -- or compatible with the Linux system I use).
+
+It was replaced with a C++ version (using the same API) which allows this version of NESticle to be cross platform.
+
 ### What works
 
 - The GUI and mouse input (mostly)
@@ -34,3 +38,5 @@ This is mostly using the original code with some fixes, and some compiled code r
   (this is on a Linux system I've yet to attempt building on windows but it should work with mingw64)
 
   **Note:** You need to use at least `g++ 7` as I used C++17's ``std::filesystem`` to reimplement the ROM loader.
+
+  **Note 2:** After cloning do `git submodule update --init --recursive` to download the mos6502 emulator
