@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 // #include <mem.h>
-#include <malloc.h>
+#include <stdlib.h>
 // #include <direct.h>
 
 #include "config.h"

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
+#include <stdlib.h>
 // #include <dos.h>
 #include <fcntl.h>
 // #include <io.h>

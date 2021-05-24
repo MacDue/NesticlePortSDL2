@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "file.h"
@@ -22,7 +22,7 @@ inline IMG *FONT::getimgptr(char c)
 }
 
 int FONT::draw(char c,char *d,int x,int y)
-{ 
+{
  IMG *img=getimgptr(c);
  if (!img) return 6; //space
  img->draw(d,x,y,0);
@@ -76,7 +76,7 @@ void __cdecl FONT::printf(int x,int y,char *format,...)
  va_end(argptr);
 
  draw(s,screen,x,y);
-}    
+}
 
 void FONT::write(char *filename)
 {
@@ -85,7 +85,7 @@ void FONT::write(char *filename)
  f.write(this,size);
  f.close();
  return;
-}    
+}
 
 
 FONT *FONT::addsymbol(FONT *f,IMG *x,char c)
@@ -100,14 +100,14 @@ FONT *FONT::addsymbol(FONT *f,IMG *x,char c)
  memcpy(f->getimgptr(c),x,x->size);
   //return new font
  return f;
-}    
-    
+}
+
 
 FONT *loadfont(char *fontfile)
 {
  FILEIO f(fontfile);
  return (FONT *)f.readalloc(f.size());
-}    
+}
 
 FONT *FONT::duplicate()
 {
@@ -123,4 +123,4 @@ void FONT::convertcolor(char a,char b)
    IMG *img=getimgptr(j);
    if (img) img->convertcolor(a,b);
   }
-}    
+}

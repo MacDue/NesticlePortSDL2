@@ -8,7 +8,7 @@ OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 CFLAGS = -std=c++17 -fpermissive -Wno-narrowing -DSDL2 -DWIN95 "-D__cdecl=" -D__WATCOMC__ -Wall -I$(SRC_DIR)/ -I$(SRC_DIR)/m6502 -I$(SRC_DIR)/6502 -I$(SRC_DIR)/win95
 LFLAGS = -lstdc++fs $$(pkg-config --cflags --libs sdl2) `sdl2-config --cflags --libs` -lSDL2_image
 
-LINK = $(CC) -o $@ $^ $(LFLAGS)
+LINK = $(CXX) -o $@ $^ $(LFLAGS)
 
 # The debug build.
 nesticle: CFLAGS += -g
@@ -24,4 +24,4 @@ MKDIR_P = mkdir -p
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(MKDIR_P) `dirname $@`
-	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
+	$(CXX) $(CFLAGS) -c -o $@ $< $(LFLAGS)

@@ -1,7 +1,7 @@
 //routines for configuration file
 #include <string.h>
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #include "input.h"
 #include "config.h"
