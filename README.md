@@ -18,6 +18,10 @@ Screenshot of Nesticle running on Ubuntu 20.04:
 
 (compiled with g++ 9.3 as C++17!)
 
+### Windows builds
+
+Windows (64bit) builds here: <https://github.com/MacDue/NesticlePortSDL2/releases>
+
 ---
 
 This is mostly using the original source code with some fixes, and some compiled code that was reverse engineered (as the released source was incomplete however there were compiled object files for the missing parts that were manually decompiled).
