@@ -48,7 +48,8 @@ If you want to get the true experience you get try getting the original 6502 emu
   make nesticle         # note compiling the code as 64bit works!
   ./nesticle            # run the emulator (needs to be in the same folder as gui.vol and anes.pal)
   ```
-  (this is on a Linux system I've yet to attempt building on windows but it should work with mingw64 -- there's no Linux specific code and SDL2 is cross-platform)
+  The above steps work on both Linux and Windows.
+  If you're building on Windows you will need to install [MSYS2](https://www.msys2.org/) with MinGW first (and install SDL2 with MSYS2), which gives a Linux-like build environment that can run the makefile.
 
   **Note:** You need to use at least `g++-7` (from GCC 7) as I used C++17's ``std::filesystem`` to reimplement the ROM loader.
 

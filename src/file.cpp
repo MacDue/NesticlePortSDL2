@@ -77,7 +77,7 @@ void enumdir(char *path, DIRFUNCPTR func,void *context)
  // _dos_findclose(&ff);
  // #endif
  for (auto const &entry : fs::directory_iterator("./")) {
-   auto fn = entry.path().filename();
+   auto fn = entry.path().filename().string();
    const char* c_fn = fn.c_str();
    if (!fs::is_regular_file(entry.status())
         || !wildcard_match(path, c_fn)
